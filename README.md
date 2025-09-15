@@ -10,3 +10,5 @@ Sistema desenvolvido para a disciplina de Sistemas Distribuídos e Mobile (SDM) 
 | Fabrício Valdemar de Aguiar Filho     | @AguiarFabricio & Fabricio de Aguiar | 10725115451 |
 | Gabriel Machado da Fonseca            | @Machadox18                          | 10725115066 |
 | Mario Gabriel Imperator dos Santos    | @mariooimp                           | 10725115250 |
+
+---
