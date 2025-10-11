@@ -28,21 +28,283 @@ public class FrmCategoria extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        JTextNomeCad = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        ComboTamanho = new javax.swing.JComboBox<>();
+        ComboEmbalagem = new javax.swing.JComboBox<>();
+        JBLimpar = new javax.swing.JButton();
+        JBCadastrar = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        JTableCategoria = new javax.swing.JTable();
+        jLabel6 = new javax.swing.JLabel();
+        JTextNomeEdit = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        ComboTamanho2 = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        ComboEmbalagem2 = new javax.swing.JComboBox<>();
+        JBCancelar = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        JBAlterar = new javax.swing.JButton();
+        JBApagar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
+
+        jLabel1.setFont(new java.awt.Font("Source Serif Pro", 1, 16)); // NOI18N
+        jLabel1.setText("   Cadastrar categorias");
+        jLabel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel2.setFont(new java.awt.Font("Source Serif Pro", 1, 13)); // NOI18N
+        jLabel2.setText("Nome:");
+
+        JTextNomeCad.setBackground(new java.awt.Color(204, 204, 255));
+        JTextNomeCad.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JTextNomeCad.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel3.setFont(new java.awt.Font("Source Serif Pro", 1, 13)); // NOI18N
+        jLabel3.setText("Tamanho:");
+
+        jLabel4.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        jLabel4.setText("Embalagem:");
+
+        ComboTamanho.setBackground(new java.awt.Color(204, 204, 255));
+        ComboTamanho.setFont(new java.awt.Font("Source Serif Pro", 2, 12)); // NOI18N
+        ComboTamanho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar", "Pequeno", "Médio", "Grande" }));
+        ComboTamanho.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        ComboEmbalagem.setBackground(new java.awt.Color(204, 204, 255));
+        ComboEmbalagem.setFont(new java.awt.Font("Source Serif Pro", 2, 12)); // NOI18N
+        ComboEmbalagem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar", "Lata", "Vidro", "Plástico", " " }));
+        ComboEmbalagem.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        JBLimpar.setBackground(new java.awt.Color(204, 204, 255));
+        JBLimpar.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JBLimpar.setText("Limpar");
+        JBLimpar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        JBCadastrar.setBackground(new java.awt.Color(204, 204, 255));
+        JBCadastrar.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JBCadastrar.setText("Cadastrar");
+        JBCadastrar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(ComboEmbalagem, javax.swing.GroupLayout.Alignment.LEADING, 0, 122, Short.MAX_VALUE)
+                        .addComponent(ComboTamanho, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                            .addComponent(JBLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(JBCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JTextNomeCad, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(58, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JTextNomeCad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ComboTamanho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(ComboEmbalagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(JBLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JBCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel5.setFont(new java.awt.Font("Source Serif Pro", 1, 16)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(204, 204, 255));
+        jLabel5.setText("  Gerenciar categorias");
+        jLabel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        JTableCategoria.setBackground(new java.awt.Color(204, 204, 255));
+        JTableCategoria.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        JTableCategoria.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JTableCategoria.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Id", "Nome", "Tamanho", "Embalagem"
+            }
+        ));
+        jScrollPane1.setViewportView(JTableCategoria);
+
+        jLabel6.setFont(new java.awt.Font("Source Serif Pro", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(204, 204, 255));
+        jLabel6.setText("Nome:");
+
+        JTextNomeEdit.setBackground(new java.awt.Color(0, 0, 0));
+        JTextNomeEdit.setForeground(new java.awt.Color(204, 204, 255));
+        JTextNomeEdit.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+
+        jLabel7.setFont(new java.awt.Font("Source Serif Pro", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 255));
+        jLabel7.setText("Tamanho");
+
+        ComboTamanho2.setBackground(new java.awt.Color(0, 0, 0));
+        ComboTamanho2.setFont(new java.awt.Font("Source Serif Pro", 2, 12)); // NOI18N
+        ComboTamanho2.setForeground(new java.awt.Color(204, 204, 255));
+        ComboTamanho2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar", "Pequeno", "Médio", "Grande" }));
+        ComboTamanho2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Source Serif Pro", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(204, 204, 255));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Embalagem");
+
+        ComboEmbalagem2.setBackground(new java.awt.Color(0, 0, 0));
+        ComboEmbalagem2.setFont(new java.awt.Font("Source Serif Pro", 2, 12)); // NOI18N
+        ComboEmbalagem2.setForeground(new java.awt.Color(204, 204, 255));
+        ComboEmbalagem2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar", "Lata", "Vidro", "Plástico", " " }));
+        ComboEmbalagem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboEmbalagem2ActionPerformed(evt);
+            }
+        });
+
+        JBCancelar.setBackground(new java.awt.Color(0, 0, 0));
+        JBCancelar.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JBCancelar.setForeground(new java.awt.Color(204, 204, 255));
+        JBCancelar.setText("Cancelar");
+
+        jButton4.setText("Apagar");
+
+        JBAlterar.setBackground(new java.awt.Color(0, 0, 0));
+        JBAlterar.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JBAlterar.setForeground(new java.awt.Color(204, 204, 255));
+        JBAlterar.setText("Alterar");
+        JBAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBAlterarActionPerformed(evt);
+            }
+        });
+
+        JBApagar.setBackground(new java.awt.Color(0, 0, 0));
+        JBApagar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        JBApagar.setForeground(new java.awt.Color(204, 204, 255));
+        JBApagar.setText("Apagar");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(169, 169, 169)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(JTextNomeEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(ComboTamanho2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(ComboEmbalagem2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(JBCancelar)
+                                .addGap(50, 50, 50)
+                                .addComponent(JBAlterar))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(268, 268, 268)
+                                .addComponent(JBApagar)
+                                .addGap(160, 160, 160)
+                                .addComponent(jButton4))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jLabel6)
+                .addGap(11, 11, 11)
+                .addComponent(JTextNomeEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addComponent(ComboTamanho2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
+                .addComponent(ComboEmbalagem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(JBCancelar)
+                    .addComponent(jButton4)
+                    .addComponent(JBAlterar)
+                    .addComponent(JBApagar))
+                .addContainerGap(61, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 542, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 362, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ComboEmbalagem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboEmbalagem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboEmbalagem2ActionPerformed
+
+    private void JBAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBAlterarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JBAlterarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -70,5 +332,29 @@ public class FrmCategoria extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboEmbalagem;
+    private javax.swing.JComboBox<String> ComboEmbalagem2;
+    private javax.swing.JComboBox<String> ComboTamanho;
+    private javax.swing.JComboBox<String> ComboTamanho2;
+    private javax.swing.JButton JBAlterar;
+    private javax.swing.JButton JBApagar;
+    private javax.swing.JButton JBCadastrar;
+    private javax.swing.JButton JBCancelar;
+    private javax.swing.JButton JBLimpar;
+    private javax.swing.JTable JTableCategoria;
+    private javax.swing.JTextField JTextNomeCad;
+    private javax.swing.JTextField JTextNomeEdit;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
