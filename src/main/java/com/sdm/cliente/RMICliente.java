@@ -9,7 +9,9 @@ import java.rmi.registry.Registry;
  */
 public class RMICliente {
 
-    private static RemoteEstoque service;
+    private static RemoteProduto produtoService;
+    private static RemoteCategoria categoriaService;
+    private static RemoteMovimentacao movimentacaoService;
 
     /**
      * Inicia a conexão com o servidor RMI.
@@ -19,7 +21,11 @@ public class RMICliente {
      */
     public static void start(String host, int port) throws Exception {
         Registry registry = LocateRegistry.getRegistry(host, port);
-        service = (RemoteEstoque) registry.lookup("EstoqueService");
+
+        produtoService = (RemoteProduto) registry.lookup("ProdutoService");
+        categoriaService = (RemoteCategoria) registry.lookup("CategoriaService");
+        movimentacaoService = (RemoteMovimentacao) registry.lookup("MovimentacaoService");
+
         System.out.println("Conectado ao servidor RMI em " + host + ":" + port);
     }
 
@@ -27,26 +33,33 @@ public class RMICliente {
      * Retorna a instância remota do serviço de estoque.
      * Pode ser chamada em qualquer lugar do cliente.
      */
-    public static RemoteEstoque getService() {
-        return service;
+    public static RemoteProduto getProdutoService() {
+        return produtoService;
+    }
+
+    public static RemoteCategoria getCategoriaService() {
+        return categoriaService;
+    }
+
+    public static RemoteMovimentacao getMovimentacaoService() {
+        return movimentacaoService;
     }
 
     // Teste rápido (opcional)
     public static void main(String[] args) {
-        String host = (args.length > 0) ? args[0] : "localhost";
-        int port = 1099;
+    try {
+        // Conecta ao servidor RMI
+        RMICliente.start("localhost", 1099);
 
-        try {
-            RMICliente.start(host, port);
+        System.out.println("Produtos cadastrados:");
 
-            // Teste simples: listar produtos
-            System.out.println("Produtos no estoque:");
-            RMICliente.getService().listarProdutos()
-                .forEach(p -> System.out.println(" - " + p.getNome()));
+        // Chama o serviço remoto diretamente
+        getProdutoService().listarProdutos().forEach(p ->
+                System.out.println(" - " + p.getNome())
+        );
 
-        } catch (Exception e) {
-            System.err.println("Erro ao conectar ao servidor RMI:");
-            e.printStackTrace();
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 }
