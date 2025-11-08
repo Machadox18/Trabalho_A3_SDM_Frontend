@@ -12,11 +12,36 @@ public class FrmProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmProduto.class.getName());
 
-    /**
-     * Creates new form FrmProduto
-     */
+
     public FrmProduto() {
         initComponents();
+        
+          // Botão Criar Produto → abre a tela de criação
+    JBCriarProduto.addActionListener(e -> {
+        new FrmCriarProduto().setVisible(true);
+        dispose(); // fecha a tela atual
+    });
+
+    // Botão Editar Produto → abre a tela de edição
+    JBEditarProduto.addActionListener(e -> {
+        new FrmEditarProduto().setVisible(true);
+        dispose();
+    });
+
+    // Botão Sair
+    JBSair.addActionListener(e -> {
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente sair?",
+                "Confirmação",
+                javax.swing.JOptionPane.YES_NO_OPTION
+        );
+        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+            dispose();
+        }
+    });
+
+        
     }
 
     /**
@@ -29,32 +54,32 @@ public class FrmProduto extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        JBCriarProduto = new javax.swing.JButton();
+        JBEditarProduto = new javax.swing.JButton();
+        JBSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 0));
-        jButton1.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(204, 204, 255));
-        jButton1.setText("Criar Produto");
-        jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+        JBCriarProduto.setBackground(new java.awt.Color(0, 0, 0));
+        JBCriarProduto.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
+        JBCriarProduto.setForeground(new java.awt.Color(204, 204, 255));
+        JBCriarProduto.setText("Criar Produto");
+        JBCriarProduto.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
 
-        jButton2.setBackground(new java.awt.Color(0, 0, 0));
-        jButton2.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(204, 204, 255));
-        jButton2.setText("Editar Produto");
-        jButton2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+        JBEditarProduto.setBackground(new java.awt.Color(0, 0, 0));
+        JBEditarProduto.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
+        JBEditarProduto.setForeground(new java.awt.Color(204, 204, 255));
+        JBEditarProduto.setText("Editar Produto");
+        JBEditarProduto.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
-        jButton3.setFont(new java.awt.Font("Source Serif Pro", 1, 17)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(204, 204, 255));
-        jButton3.setText("Sair");
-        jButton3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+        JBSair.setBackground(new java.awt.Color(0, 0, 0));
+        JBSair.setFont(new java.awt.Font("Source Serif Pro", 1, 17)); // NOI18N
+        JBSair.setForeground(new java.awt.Color(204, 204, 255));
+        JBSair.setText("Sair");
+        JBSair.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -65,22 +90,22 @@ public class FrmProduto extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(264, 264, 264)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(JBEditarProduto, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                            .addComponent(JBCriarProduto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(301, 301, 301)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(JBSair, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(198, 281, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(120, 120, 120)
-                .addComponent(jButton2)
+                .addComponent(JBEditarProduto)
                 .addGap(36, 36, 36)
-                .addComponent(jButton1)
+                .addComponent(JBCriarProduto)
                 .addGap(85, 85, 85)
-                .addComponent(jButton3)
+                .addComponent(JBSair)
                 .addContainerGap(145, Short.MAX_VALUE))
         );
 
@@ -124,9 +149,9 @@ public class FrmProduto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton JBCriarProduto;
+    private javax.swing.JButton JBEditarProduto;
+    private javax.swing.JButton JBSair;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
