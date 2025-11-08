@@ -1,14 +1,10 @@
 package com.sdm.view.frmprincipal;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+import com.sdm.view.frmcategoria.FrmCategoria;
+import com.sdm.view.frmproduto.FrmProduto;
+import com.sdm.view.frmmovimentar.FrmMovimentar;
 
-/**
- *
- * @author Master
- */
+
 public class FrmPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmPrincipal.class.getName());
@@ -159,15 +155,21 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JBProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBProdutoActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:                                         
+    FrmProduto frm = new FrmProduto();
+    frm.setVisible(true);
     }//GEN-LAST:event_JBProdutoActionPerformed
 
     private void JBMovimentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBMovimentarActionPerformed
         // TODO add your handling code here:
+    FrmMovimentar frm = new FrmMovimentar();
+    frm.setVisible(true);
     }//GEN-LAST:event_JBMovimentarActionPerformed
 
     private void JBCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCategoriaActionPerformed
         // TODO add your handling code here:
+          FrmCategoria frm = new FrmCategoria();
+     frm.setVisible(true);
     }//GEN-LAST:event_JBCategoriaActionPerformed
 
     private void JBRelatótiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBRelatótiosActionPerformed
