@@ -12,6 +12,7 @@ public class RMICliente {
     private static RemoteProduto produtoService;
     private static RemoteCategoria categoriaService;
     private static RemoteMovimentacao movimentacaoService;
+    private static RemoteRelatorio relatorioService;
 
     /**
      * Inicia a conexão com o servidor RMI.
@@ -25,6 +26,7 @@ public class RMICliente {
         produtoService = (RemoteProduto) registry.lookup("ProdutoService");
         categoriaService = (RemoteCategoria) registry.lookup("CategoriaService");
         movimentacaoService = (RemoteMovimentacao) registry.lookup("MovimentacaoService");
+        relatorioService = (RemoteRelatorio) registry.lookup("RelatorioService");
 
         System.out.println("Conectado ao servidor RMI em " + host + ":" + port);
     }
@@ -43,6 +45,10 @@ public class RMICliente {
 
     public static RemoteMovimentacao getMovimentacaoService() {
         return movimentacaoService;
+    }
+
+    public static RemoteRelatorio getRelatorioService() {
+        return relatorioService;
     }
 
     // Teste rápido (opcional)
