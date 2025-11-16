@@ -134,6 +134,11 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JBSair.setForeground(new java.awt.Color(204, 204, 255));
         JBSair.setText("Sair");
         JBSair.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+        JBSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBSairActionPerformed(evt);
+            }
+        });
 
         JBApagar.setBackground(new java.awt.Color(0, 0, 0));
         JBApagar.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
@@ -260,6 +265,11 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     private void JBApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBApagarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_JBApagarActionPerformed
+
+    private void JBSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBSairActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_JBSairActionPerformed
 
     /**
      * @param args the command line arguments

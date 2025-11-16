@@ -415,6 +415,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Sair"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JBSairActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="JBCriar">
           <Properties>
@@ -426,6 +429,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Criar Produto"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JBCriarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

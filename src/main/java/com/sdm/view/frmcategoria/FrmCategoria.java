@@ -200,6 +200,11 @@ public class FrmCategoria extends javax.swing.JFrame {
         JBCancelar.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
         JBCancelar.setForeground(new java.awt.Color(204, 204, 255));
         JBCancelar.setText("Cancelar");
+        JBCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBCancelarActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Apagar");
 
@@ -305,6 +310,11 @@ public class FrmCategoria extends javax.swing.JFrame {
     private void JBAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBAlterarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_JBAlterarActionPerformed
+
+    private void JBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCancelarActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_JBCancelarActionPerformed
 
     /**
      * @param args the command line arguments

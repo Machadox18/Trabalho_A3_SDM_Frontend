@@ -16,7 +16,7 @@ public class Produto implements Serializable {
 
     //Construtores
 
-    public Produto() {
+    public Produto(int par, String nome, double preco, String unidade, int qtdAtual, int qtdMin, int qtdMax, String categoria) {
     }
 
     public Produto(int id, String nome, double precoUnitario, String unidade, int quantidadeEstoque, int quantidadeMinima, int quantidadeMaxima, Categoria categoria) {

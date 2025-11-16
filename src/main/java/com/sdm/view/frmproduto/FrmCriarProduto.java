@@ -4,6 +4,12 @@
  */
 package com.sdm.view.frmproduto;
 
+import com.sdm.cliente.RMICliente;
+import com.sdm.cliente.RemoteProduto;
+import com.sdm.model.Categoria;
+import com.sdm.model.Produto;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Master
@@ -192,10 +198,20 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         JBSair.setBackground(new java.awt.Color(204, 204, 255));
         JBSair.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
         JBSair.setText("Sair");
+        JBSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBSairActionPerformed(evt);
+            }
+        });
 
         JBCriar.setBackground(new java.awt.Color(204, 204, 255));
         JBCriar.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
         JBCriar.setText("Criar Produto");
+        JBCriar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBCriarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -236,6 +252,50 @@ public class FrmCriarProduto extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void JBCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCriarActionPerformed
+        // TODO add your handling code here:
+        try {
+        String nome = JFTNome.getText();
+        double preco = Double.parseDouble(JTFPreco.getText());
+        double peso = Double.parseDouble(JTFPesoUnidade.getText());
+        String unidade = JCBUnidade.getSelectedItem().toString();
+
+        int qtdAtual = Integer.parseInt(JTFAtual.getText());
+        int qtdMin = Integer.parseInt(JTFMinima.getText());
+        int qtdMax = Integer.parseInt(JTFMaxima.getText());
+        String categoria = JTFCategoria.getText();
+     
+
+        Produto p = new Produto(
+                0,
+                nome,
+                preco,
+                unidade,
+                qtdAtual,
+                qtdMin,
+                qtdMax,
+                categoria
+        );
+
+        RemoteProduto service = RMICliente.getProdutoService();
+        service.inserirProduto(p);
+
+        JOptionPane.showMessageDialog(this, "Produto criado com sucesso!");
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+                "Erro ao criar produto: " + e.getMessage(),
+                "Erro",
+                JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_JBCriarActionPerformed
+
+    private void JBSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBSairActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_JBSairActionPerformed
 
     /**
      * @param args the command line arguments
