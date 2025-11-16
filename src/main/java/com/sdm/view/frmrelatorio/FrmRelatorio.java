@@ -4,13 +4,50 @@
  */
 package com.sdm.view.frmrelatorio;
 
+import com.sdm.cliente.RMICliente;
+import com.sdm.cliente.RemoteRelatorio;
+import com.sdm.model.Produto;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Gabriel
  */
 public class FrmRelatorio extends javax.swing.JFrame {
+private void preencherTabelaProdutos(List<Produto> lista) {
 
-    /**
+    String[] colunas = {"ID", "Nome", "Categoria", "Preço", "Estoque Atual"};
+    DefaultTableModel modelo = new DefaultTableModel(colunas, 0);
+
+    for (Produto p : lista) {
+        modelo.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getCategoria().getNome(),
+                p.getPrecoUnitario(),
+                p.getQuantidadeEstoque()
+        });
+    }
+
+    TabelaRelatorio.setModel(modelo);
+}
+private void preencherTabelaBalanco(Map<String, Object> dados) {
+
+    String[] colunas = {"Descrição", "Valor"};
+    DefaultTableModel modelo = new DefaultTableModel(colunas, 0);
+
+    for (String chave : dados.keySet()) {
+        modelo.addRow(new Object[]{chave, dados.get(chave)});
+    }
+
+    TabelaRelatorio.setModel(modelo);
+}  
+
+
+/**
      * Creates new form FrmRelatooriooo
      */
     public FrmRelatorio() {
@@ -30,8 +67,9 @@ public class FrmRelatorio extends javax.swing.JFrame {
         JCSeletor = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         TabelaRelatorio = new javax.swing.JTable();
-        JBRelatótios = new javax.swing.JButton();
-        JBRelatótios1 = new javax.swing.JButton();
+        JBGerarRelatótios = new javax.swing.JButton();
+        JBVoltar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -51,78 +89,95 @@ public class FrmRelatorio extends javax.swing.JFrame {
         TabelaRelatorio.setForeground(new java.awt.Color(204, 204, 255));
         TabelaRelatorio.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Nome", "Preço", "Unidade de medida", "Categoria"
             }
         ));
         TabelaRelatorio.setSelectionForeground(new java.awt.Color(204, 204, 255));
         jScrollPane1.setViewportView(TabelaRelatorio);
 
-        JBRelatótios.setBackground(new java.awt.Color(0, 0, 0));
-        JBRelatótios.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
-        JBRelatótios.setForeground(new java.awt.Color(204, 204, 255));
-        JBRelatótios.setText("Gerar Relatório");
-        JBRelatótios.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.white, java.awt.Color.white, null));
-        JBRelatótios.addActionListener(new java.awt.event.ActionListener() {
+        JBGerarRelatótios.setBackground(new java.awt.Color(0, 0, 0));
+        JBGerarRelatótios.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
+        JBGerarRelatótios.setForeground(new java.awt.Color(204, 204, 255));
+        JBGerarRelatótios.setText("Gerar Relatório");
+        JBGerarRelatótios.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.white, java.awt.Color.white, null));
+        JBGerarRelatótios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JBRelatótiosActionPerformed(evt);
+                JBGerarRelatótiosActionPerformed(evt);
             }
         });
 
-        JBRelatótios1.setBackground(new java.awt.Color(0, 0, 0));
-        JBRelatótios1.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
-        JBRelatótios1.setForeground(new java.awt.Color(204, 204, 255));
-        JBRelatótios1.setText("Voltar");
-        JBRelatótios1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.white, java.awt.Color.white, null));
+        JBVoltar.setBackground(new java.awt.Color(0, 0, 0));
+        JBVoltar.setFont(new java.awt.Font("Source Serif Pro", 1, 18)); // NOI18N
+        JBVoltar.setForeground(new java.awt.Color(204, 204, 255));
+        JBVoltar.setText("Voltar");
+        JBVoltar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.white, java.awt.Color.white, null));
+
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Source Serif Pro Black", 1, 38)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setForeground(new java.awt.Color(204, 204, 255));
         jLabel1.setText("Relatórios de Estoque");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1)
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(JBRelatótios1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(179, 179, 179))
+                        .addGap(886, 886, 886)
+                        .addComponent(JBGerarRelatótios, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1197, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(JCSeletor, javax.swing.GroupLayout.PREFERRED_SIZE, 734, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(124, 124, 124)
-                                .addComponent(JBRelatótios, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(35, Short.MAX_VALUE))))
+                                .addGap(170, 170, 170)
+                                .addComponent(JBVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(JBRelatótios1)))
-                .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(JCSeletor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JBRelatótios))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(JBVoltar)
+                        .addGap(37, 37, 37))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(JCSeletor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)))
+                .addComponent(JBGerarRelatótios)
+                .addGap(44, 44, 44)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(350, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -143,9 +198,53 @@ public class FrmRelatorio extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_JCSeletorActionPerformed
 
-    private void JBRelatótiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBRelatótiosActionPerformed
+    private void JBGerarRelatótiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBGerarRelatótiosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_JBRelatótiosActionPerformed
+        try {
+        RemoteRelatorio relService = RMICliente.getRelatorioService();
+
+        String opcao = JCSeletor.getSelectedItem().toString();
+
+        switch (opcao) {
+
+            case "Produtos abaixo da quantidade minima":
+                List<Produto> abaixo = relService.produtosAbaixoMinimo();
+                preencherTabelaProdutos(abaixo);
+                break;
+
+            case "Produto acima da quantidade maxima":
+                List<Produto> acima = relService.produtosAcimaMaximo();
+                preencherTabelaProdutos(acima);
+                break;
+
+            case "Balanço Físico e Financeiro dos produtos":
+                Map<String, Object> balanco = relService.relatorioBalanco();
+                preencherTabelaBalanco(balanco);
+                break;
+
+            case "Lista de Preços dos produtos":
+                // usa o relatório de movimentações, já que não existe um método específico
+                List<Produto> movs = relService.relatorioMovimentacoes();
+                preencherTabelaProdutos(movs);
+                break;
+
+            case "Relação de produtos por categoria":
+                // Também usa relatorioMovimentacoes() pois não existe outro método
+                List<Produto> porCategoria = relService.relatorioMovimentacoes();
+                preencherTabelaProdutos(porCategoria);
+                break;
+
+            default:
+                JOptionPane.showMessageDialog(this, "Relatório não implementado.");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Erro ao gerar relatório: " + e.getMessage(),
+                "Erro", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_JBGerarRelatótiosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -184,12 +283,13 @@ public class FrmRelatorio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton JBRelatótios;
-    private javax.swing.JButton JBRelatótios1;
+    private javax.swing.JButton JBGerarRelatótios;
+    private javax.swing.JButton JBVoltar;
     private javax.swing.JComboBox<String> JCSeletor;
     private javax.swing.JTable TabelaRelatorio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
