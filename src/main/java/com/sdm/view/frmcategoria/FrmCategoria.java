@@ -4,6 +4,15 @@
  */
 package com.sdm.view.frmcategoria;
 
+import com.sdm.cliente.RMICliente;
+import com.sdm.cliente.RemoteCategoria;
+import com.sdm.model.Categoria;
+import com.sdm.model.EmbalagemProduto;
+import com.sdm.model.TamanhoProduto;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Master
@@ -18,7 +27,32 @@ public class FrmCategoria extends javax.swing.JFrame {
     public FrmCategoria() {
         initComponents();
     }
+private void carregarTabela() {
+    try {
+        RemoteCategoria service = RMICliente.getCategoriaService();
+        List<Categoria> categorias = service.listarCategorias();
 
+        DefaultTableModel modelo = (DefaultTableModel) JTableCategoria.getModel();
+        modelo.setRowCount(0);
+
+        for (Categoria c : categorias) {
+            modelo.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getTamanho(),
+                c.getEmbalagem()
+            });
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao carregar categorias: " + e.getMessage());
+    }
+}
+
+private void limparCampos() {
+    JTextNomeCad.setText("");
+    ComboTamanho.setSelectedIndex(0);
+    ComboEmbalagem.setSelectedIndex(0);
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,6 +129,11 @@ public class FrmCategoria extends javax.swing.JFrame {
         JBCadastrar.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
         JBCadastrar.setText("Cadastrar");
         JBCadastrar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JBCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBCadastrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -309,6 +348,32 @@ public class FrmCategoria extends javax.swing.JFrame {
 
     private void JBAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBAlterarActionPerformed
         // TODO add your handling code here:
+        try {
+    int linha = JTableCategoria.getSelectedRow();
+    if (linha < 0) {
+        JOptionPane.showMessageDialog(this, "Selecione uma categoria na tabela!");
+        return;
+    }
+
+    int id = (int) JTableCategoria.getValueAt(linha, 0);
+
+    String nome = JTextNomeEdit.getText();
+
+    TamanhoProduto tamanho = TamanhoProduto.valueOf(ComboTamanho2.getSelectedItem().toString());
+    EmbalagemProduto embalagem = EmbalagemProduto.valueOf(ComboEmbalagem2.getSelectedItem().toString());
+
+    Categoria c = new Categoria(id, nome, tamanho, embalagem);
+
+    RemoteCategoria service = RMICliente.getCategoriaService();
+    service.alterarCategoria(c);
+
+    JOptionPane.showMessageDialog(this, "Categoria alterada com sucesso!");
+    carregarTabela();
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Erro ao alterar: " + e.getMessage(),
+            "Erro", JOptionPane.ERROR_MESSAGE);
+}
     }//GEN-LAST:event_JBAlterarActionPerformed
 
     private void JBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCancelarActionPerformed
@@ -316,6 +381,38 @@ public class FrmCategoria extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_JBCancelarActionPerformed
 
+    private void JBCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCadastrarActionPerformed
+        // TODO add your handling code here:
+        try {
+        String nome = JTextNomeCad.getText();
+        TamanhoProduto tamanho = TamanhoProduto.valueOf(ComboTamanho.getSelectedItem().toString());
+        EmbalagemProduto embalagem = EmbalagemProduto.valueOf(ComboEmbalagem.getSelectedItem().toString());
+
+        Categoria c = new Categoria(0, nome, tamanho, embalagem);
+
+        RemoteCategoria service = RMICliente.getCategoriaService();
+        service.inserirCategoria(c);
+
+        JOptionPane.showMessageDialog(this, "Categoria cadastrada com sucesso!");
+        limparCampos();
+        carregarTabela();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao cadastrar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_JBCadastrarActionPerformed
+
+    private void tblCategoriasMouseClicked(java.awt.event.MouseEvent evt) {
+    int linha = JTableCategoria.getSelectedRow();
+
+    if (linha >= 0) {
+        JTextNomeEdit.setText(JTableCategoria.getValueAt(linha, 1).toString());
+        ComboTamanho2.setSelectedItem(JTableCategoria.getValueAt(linha, 2).toString());
+        ComboEmbalagem2.setSelectedItem(JTableCategoria.getValueAt(linha, 3).toString());
+    }
+}
+
+    
     /**
      * @param args the command line arguments
      */
