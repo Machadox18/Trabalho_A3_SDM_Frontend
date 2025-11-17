@@ -4,20 +4,56 @@
  */
 package com.sdm.view.frmmovimentar;
 
+import com.sdm.cliente.RMICliente;
+import com.sdm.cliente.RemoteMovimentacao;
+import com.sdm.cliente.RemoteProduto;
+import com.sdm.model.Movimentacao;
+import com.sdm.model.Produto;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Master
  */
 public class FrmMovimentar extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMovimentar.class.getName());
 
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMovimentar.class.getName());
+   private RemoteProduto produtoService = RMICliente.getProdutoService();
+   private RemoteMovimentacao movimentacaoService = RMICliente.getMovimentacaoService();
     /**
      * Creates new form FrmMovimentar
      */
     public FrmMovimentar() {
         initComponents();
+    try {
+    produtoService = RMICliente.getProdutoService();
+    movimentacaoService = RMICliente.getMovimentacaoService();
+
+    ComboProdutos.removeAllItems();
+
+    for (Produto p : produtoService.listarProdutos()) {
+        ComboProdutos.addItem(p.getId() + " - " + p.getNome());
     }
+
+    JTextData.setText(java.time.LocalDateTime.now().toString());
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this,
+        "Erro ao carregar produtos: " + e.getMessage());
+} 
+    }
+    
+    private void carregarProdutosNoCombo() {
+    try {
+        ComboProdutos.removeAllItems();
+        produtoService.listarProdutos().forEach(p -> {
+            ComboProdutos.addItem(p.getId() + " - " + p.getNome());
+        });
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+            "Erro ao carregar produtos: " + e.getMessage());
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,6 +102,11 @@ public class FrmMovimentar extends javax.swing.JFrame {
         JBPesquisar.setFont(new java.awt.Font("Tw Cen MT", 1, 12)); // NOI18N
         JBPesquisar.setText("Pesquisar");
         JBPesquisar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        JBPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBPesquisarActionPerformed(evt);
+            }
+        });
 
         JTableList.setBackground(new java.awt.Color(204, 204, 255));
         JTableList.setFont(new java.awt.Font("Tw Cen MT", 1, 12)); // NOI18N
@@ -239,17 +280,17 @@ public class FrmMovimentar extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(JTextObs, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JEntrada)
                             .addComponent(JSaida)))
-                    .addComponent(jLabel4)
-                    .addComponent(JTextQtd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(JTextObs, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addComponent(JTextQtd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(JBConfirmar)
                     .addComponent(JBCancelar))
@@ -275,16 +316,116 @@ public class FrmMovimentar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JSaidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JSaidaActionPerformed
-        // TODO add your handling code here:
+     // TODO add your handling code here:
     }//GEN-LAST:event_JSaidaActionPerformed
 
     private void JBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCancelarActionPerformed
         // TODO add your handling code here:
+     try {
+        // Limpa campos de texto
+        JTextQtd.setText("");
+        JTextObs.setText("");
+        JTextData.setText("");
+
+        // Desmarca Entrada/Saída
+        JEntrada.setSelected(false);
+        JSaida.setSelected(false);
+
+        // Reseta o combo
+        ComboProdutos.setSelectedIndex(-1);
+
+        // Limpa a tabela
+        DefaultTableModel model = (DefaultTableModel) JTableList.getModel();
+        model.setRowCount(0);
+
+        JOptionPane.showMessageDialog(this, "Ação cancelada.");
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao cancelar: " + e.getMessage());
+        e.printStackTrace();
+    }
     }//GEN-LAST:event_JBCancelarActionPerformed
 
     private void JBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBConfirmarActionPerformed
         // TODO add your handling code here:
+   try {
+        // Verifica se algum produto está selecionado
+        if (ComboProdutos.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um produto para pesquisar!");
+            return;
+        }
+
+        // Exemplo do Combo: "3 - Arroz"
+        String item = ComboProdutos.getSelectedItem().toString();
+        int produtoId = Integer.parseInt(item.split(" - ")[0]);  // Pega o ID antes do hífen
+
+        // Chamada RMI correta
+        Produto p = RMICliente.getProdutoService().buscarProdutoPorId(produtoId);
+
+        // Pegando o modelo da tabela
+        DefaultTableModel model = (DefaultTableModel) JTableList.getModel();
+        model.setRowCount(0); // limpa a tabela
+
+        if (p != null) {
+            model.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getPrecoUnitario(),
+                p.getUnidade(),
+                p.getQuantidadeEstoque(),
+                p.getQuantidadeMinima(),
+                p.getQuantidadeMaxima(),
+                p.getCategoria() != null ? p.getCategoria().getNome() : "Sem categoria"
+            });
+        } else {
+            JOptionPane.showMessageDialog(this, "Produto não encontrado.");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao pesquisar produto: " + e.getMessage());
+        e.printStackTrace();
+    }
     }//GEN-LAST:event_JBConfirmarActionPerformed
+
+    private void JBPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBPesquisarActionPerformed
+        // TODO add your handling code here:
+    try {
+        // validação do combo
+        if (ComboProdutos.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um produto!");
+            return;
+        }
+
+        // extrair ID do item selecionado
+        String item = ComboProdutos.getSelectedItem().toString();
+        int produtoId = Integer.parseInt(item.split(" - ")[0]); // "3 - Arroz" -> pega 3
+
+        // chamada ao serviço RMI para buscar o produto
+        Produto p = RMICliente.getProdutoService().buscarProdutoPorId(produtoId);
+
+        DefaultTableModel model = (DefaultTableModel) JTableList.getModel();
+        model.setRowCount(0); // limpa tabela
+
+        if (p != null) {
+            model.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getPrecoUnitario(),
+                p.getUnidade(),
+                p.getQuantidadeEstoque(),
+                p.getQuantidadeMinima(),
+                p.getQuantidadeMaxima(),
+                p.getCategoria() != null ? p.getCategoria().getNome() : "Sem categoria"
+            });
+        } else {
+            JOptionPane.showMessageDialog(this, "Produto não encontrado.");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao pesquisar: " + e.getMessage());
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_JBPesquisarActionPerformed
 
     /**
      * @param args the command line arguments
