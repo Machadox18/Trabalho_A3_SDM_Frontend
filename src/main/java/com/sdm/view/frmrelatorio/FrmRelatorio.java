@@ -18,33 +18,41 @@ import javax.swing.table.DefaultTableModel;
  * @author Gabriel
  */
 public class FrmRelatorio extends javax.swing.JFrame {
-private void preencherTabelaProdutos(List<Produto> lista) {
+private void setTabelaListaPrecos() {
+    TabelaRelatorio.setModel(new DefaultTableModel(
+        new Object[][]{},
+        new String[] {"ID", "Nome", "Preço", "Unidade", "Categoria"}
+    ));
+}
 
-    String[] colunas = {"ID", "Nome", "Categoria", "Preço", "Estoque Atual"};
-    DefaultTableModel modelo = new DefaultTableModel(colunas, 0);
+private void setTabelaAbaixoAcima() {
+    TabelaRelatorio.setModel(new DefaultTableModel(
+        new Object[][]{},
+        new String[] {"ID", "Nome", "Estoque Atual", "Estoque Min/Max", "Categoria"}
+    ));
+}
+
+private void setTabelaBalanco() {
+    TabelaRelatorio.setModel(new DefaultTableModel(
+        new Object[][]{},
+        new String[] {"Produto", "Qtd Estoque", "Preço Unitário", "Valor Total"}
+    ));
+}
+
+private void preencherTabelaBalanco(List<Produto> lista) {
+ DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
+    modelo.setRowCount(0);
 
     for (Produto p : lista) {
         modelo.addRow(new Object[]{
-                p.getId(),
-                p.getNome(),
-                p.getCategoria().getNome(),
-                p.getPrecoUnitario(),
-                p.getQuantidadeEstoque()
+            p.getId(),
+            p.getNome(),
+            p.getCategoria().getNome(),
+            p.getPrecoUnitario(),
+            p.getQuantidadeEstoque()
         });
     }
-
-    TabelaRelatorio.setModel(modelo);
-}
-private void preencherTabelaBalanco(Map<String, Object> dados) {
-
-    String[] colunas = {"Descrição", "Valor"};
-    DefaultTableModel modelo = new DefaultTableModel(colunas, 0);
-
-    for (String chave : dados.keySet()) {
-        modelo.addRow(new Object[]{chave, dados.get(chave)});
-    }
-
-    TabelaRelatorio.setModel(modelo);
+    
 }  
 
 
