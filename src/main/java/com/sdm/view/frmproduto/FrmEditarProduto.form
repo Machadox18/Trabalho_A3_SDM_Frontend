@@ -59,7 +59,7 @@
                       <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                      <Component id="JTFMáxima" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                      <Component id="JTFMaxima" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
                       <Component id="JTFAtual" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
                       <Component id="JTFMinima" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
                   </Group>
@@ -94,7 +94,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="JTFMáxima" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="JTFMaxima" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="JTFNome" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -148,7 +148,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="jTable1">
+            <Component class="javax.swing.JTable" name="JTableProduto">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" red="0" type="rgb"/>
@@ -367,7 +367,7 @@
             <Property name="text" type="java.lang.String" value="Quantidade m&#xe1;xima em estoque: "/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="JTFM&#xe1;xima">
+        <Component class="javax.swing.JTextField" name="JTFMaxima">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
@@ -387,7 +387,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JTFM&#xe1;ximaActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JTFMaximaActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="JBSair">

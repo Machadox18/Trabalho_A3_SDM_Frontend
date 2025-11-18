@@ -4,6 +4,14 @@
  */
 package com.sdm.view.frmproduto;
 
+import com.sdm.cliente.RMICliente;
+import com.sdm.model.Categoria;
+import com.sdm.model.Produto;
+import com.sdm.server.RemoteProduto;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Master
@@ -18,7 +26,41 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     public FrmEditarProduto() {
         initComponents();
     }
+    
+    public void carregarTabela() {
+        try {
+            RemoteProduto service = (RemoteProduto) RMICliente.getProdutoService();
+            List<Produto> produtos = service.listar();
+            
+            
+            DefaultTableModel modelo = (DefaultTableModel) JTableProduto.getModel();
+            modelo.setRowCount(0);
+            
+            for (Produto p : produtos) {
+                modelo.addRow(new Object[]{
+                    p.getId(),
+                    p.getNome(),
+                    p.getPrecoUnitario(),
+                    p.getCategoria().getEmbalagem(),
+                    p.getQuantidadeEstoque(),
+                    p.getQuantidadeMinima(),
+                    p.getQuantidadeMaxima(),
+                    p.getCategoria()
+                });
+            
+            }  
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar produtos: " + e.getMessage());
+        }
+    }
 
+    private void limparCampos() {
+        JTFNome.setText("");
+        JTFPreco.setText("");
+        JTFMaxima.setText("");
+        JTFAtual.setText("");
+        JTFMinima.setText("");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,7 +72,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        JTableProduto = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         JTFNome = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -44,7 +86,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         JTFMinima = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        JTFMáxima = new javax.swing.JTextField();
+        JTFMaxima = new javax.swing.JTextField();
         JBSair = new javax.swing.JButton();
         JBApagar = new javax.swing.JButton();
         JBAlterar = new javax.swing.JButton();
@@ -53,9 +95,9 @@ public class FrmEditarProduto extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
 
-        jTable1.setBackground(new java.awt.Color(0, 0, 0));
-        jTable1.setForeground(new java.awt.Color(204, 204, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        JTableProduto.setBackground(new java.awt.Color(0, 0, 0));
+        JTableProduto.setForeground(new java.awt.Color(204, 204, 255));
+        JTableProduto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -66,7 +108,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
                 "Id", "Nome", "Preço por unidade", "Peso da unidade", "Tipo da unidade", "Quantidade atual", "Quantidade  mínima", "Quantidade máxima", "Categoria"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(JTableProduto);
 
         jLabel1.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
         jLabel1.setText("Nome:");
@@ -120,12 +162,12 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
         jLabel7.setText("Quantidade máxima em estoque: ");
 
-        JTFMáxima.setBackground(new java.awt.Color(0, 0, 0));
-        JTFMáxima.setForeground(new java.awt.Color(204, 204, 255));
-        JTFMáxima.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
-        JTFMáxima.addActionListener(new java.awt.event.ActionListener() {
+        JTFMaxima.setBackground(new java.awt.Color(0, 0, 0));
+        JTFMaxima.setForeground(new java.awt.Color(204, 204, 255));
+        JTFMaxima.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+        JTFMaxima.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JTFMáximaActionPerformed(evt);
+                JTFMaximaActionPerformed(evt);
             }
         });
 
@@ -176,7 +218,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jLabel5)
                     .addComponent(jLabel7)
-                    .addComponent(JTFMáxima, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JTFMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JTFAtual, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JTFMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(131, 136, Short.MAX_VALUE)
@@ -205,7 +247,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
                             .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(JTFMáxima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(JTFMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,9 +296,9 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void JTFMáximaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTFMáximaActionPerformed
+    private void JTFMaximaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTFMaximaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_JTFMáximaActionPerformed
+    }//GEN-LAST:event_JTFMaximaActionPerformed
 
     private void JTFNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTFNomeActionPerformed
         // TODO add your handling code here:
@@ -264,6 +306,42 @@ public class FrmEditarProduto extends javax.swing.JFrame {
 
     private void JBApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBApagarActionPerformed
         // TODO add your handling code here:
+        try {
+            int linha = JTableProduto.getSelectedRow();
+            
+            if (linha < 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Selecione um produto na tabela!");
+            return;
+            }
+            
+            int idProduto = (int) JTableProduto.getValueAt(linha, 0);
+            
+            int confirma = JOptionPane.showConfirmDialog(this,
+                "Deseja realmente excluir este produto?",
+                "Confirmar exclusão",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirma != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        RemoteProduto service = RMICliente.getProdutoService();
+        service.deletar(idProduto);
+           
+        JOptionPane.showMessageDialog(this, 
+            "Produto excluído com sucesso!");
+        
+        carregarTabela();
+        
+        limparCampos();
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao excluir produto: " + e.getMessage());
+            
+        }
     }//GEN-LAST:event_JBApagarActionPerformed
 
     private void JBSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBSairActionPerformed
@@ -302,11 +380,12 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     private javax.swing.JButton JBSair;
     private javax.swing.JComboBox<String> JCBUnidade;
     private javax.swing.JTextField JTFAtual;
+    private javax.swing.JTextField JTFMaxima;
     private javax.swing.JTextField JTFMinima;
-    private javax.swing.JTextField JTFMáxima;
     private javax.swing.JTextField JTFNome;
     private javax.swing.JTextField JTFPeso;
     private javax.swing.JTextField JTFPreco;
+    private javax.swing.JTable JTableProduto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -316,6 +395,5 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
