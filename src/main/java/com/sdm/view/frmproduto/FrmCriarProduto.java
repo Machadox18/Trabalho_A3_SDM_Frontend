@@ -5,9 +5,9 @@
 package com.sdm.view.frmproduto;
 
 import com.sdm.cliente.RMICliente;
-import com.sdm.cliente.RemoteProduto;
-import com.sdm.model.Categoria;
+import com.sdm.server.RemoteProduto;
 import com.sdm.model.Produto;
+import com.sdm.server.RemoteProduto;
 import javax.swing.JOptionPane;
 
 /**
@@ -279,7 +279,7 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         );
 
         RemoteProduto service = RMICliente.getProdutoService();
-        service.inserirProduto(p);
+        service.inserir(p);
 
         JOptionPane.showMessageDialog(this, "Produto criado com sucesso!");
 
