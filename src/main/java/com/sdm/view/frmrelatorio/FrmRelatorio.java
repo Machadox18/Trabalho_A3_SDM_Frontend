@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.sdm.view.frmrelatorio;
 
 import com.sdm.cliente.RMICliente;
@@ -17,83 +13,125 @@ import javax.swing.table.DefaultTableModel;
  * @author Gabriel
  */
 public class FrmRelatorio extends javax.swing.JFrame {
-private void setTabelaListaPrecos() {
-    TabelaRelatorio.setModel(new DefaultTableModel(
-        new Object[][]{},
-        new String[] {"ID", "Nome", "Preço", "Unidade", "Categoria"}
-    ));
-}
-
-private void setTabelaAbaixoAcima() {
-    TabelaRelatorio.setModel(new DefaultTableModel(
-        new Object[][]{},
-        new String[] {"ID", "Nome", "Estoque Atual", "Estoque Min/Max", "Categoria"}
-    ));
-}
-
-private void setTabelaBalanco() {
-    TabelaRelatorio.setModel(new DefaultTableModel(
-        new Object[][]{},
-        new String[] {"Produto", "Qtd Estoque", "Preço Unitário", "Valor Total"}
-    ));
-}
-
-private void preencherTabelaBalanco(List<Produto> lista) {
- DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
-    modelo.setRowCount(0);
-
-    for (Produto p : lista) {
-        double total = p.getQuantidadeEstoque() * p.getPrecoUnitario();
-        
-        modelo.addRow(new Object[]{
-           p.getNome(),
-            p.getQuantidadeEstoque(),
-            p.getPrecoUnitario(),
-            total
-        });
-    }
     
-}  
-
-private void preencherTabelaPorCategoria(List<Categoria> lista) {
-    DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
-    modelo.setRowCount(0);
-
-    for (Categoria c : lista) {
-        modelo.addRow(new Object[]{
-            c.getNome(),
-            c.getTotalProdutos()
-        });
+    private void setTabelaListaPrecos() {
+        TabelaRelatorio.setModel(new DefaultTableModel(
+            new Object[][]{},
+            new String[] {"ID", "Nome", "Preço", "Unidade", "Categoria"}
+        ));
     }
-}
 
-private void preencherTabelaProdutos(List<Produto> lista) {
-    DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
-    modelo.setRowCount(0);
-
-    for (Produto p : lista) {
-        modelo.addRow(new Object[]{
-            p.getId(),
-            p.getNome(),
-            p.getPrecoUnitario(),
-            p.getUnidade(),
-            p.getCategoria().getNome()
-        });
+    private void setTabelaAbaixoAcima() {
+        TabelaRelatorio.setModel(new DefaultTableModel(
+            new Object[][]{},
+            new String[] {"ID", "Nome", "Estoque Atual", "Estoque Min/Max", "Categoria"}
+        ));
     }
-}
 
-private void setTabelaPorCategoria() {
-    TabelaRelatorio.setModel(new DefaultTableModel(
-        new Object[][]{},
-        new String[] {"Categoria", "Quantidade de Produtos"}
-    ));
-}
+    private void setTabelaBalanco() {
+        TabelaRelatorio.setModel(new DefaultTableModel(
+            new Object[][]{},
+            new String[] {"Produto", "Qtd Estoque", "Preço Unitário", "Valor Total"}
+        ));
+    }
 
-/**
-     * Creates new form FrmRelatooriooo
-     */
+    private void preencherTabelaBalanco(List<Produto> lista) {
+     DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
+        modelo.setRowCount(0);
+
+        for (Produto p : lista) {
+            double total = p.getQuantidadeEstoque() * p.getPrecoUnitario();
+
+            modelo.addRow(new Object[]{
+               p.getNome(),
+                p.getQuantidadeEstoque(),
+                p.getPrecoUnitario(),
+                total
+            });
+        }
+
+    }  
+
+    private void preencherTabelaPorCategoria(List<Categoria> lista) {
+        DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
+        modelo.setRowCount(0);
+
+        for (Categoria c : lista) {
+            modelo.addRow(new Object[]{
+                c.getNome(),
+                c.getTotalProdutos()
+            });
+        }
+    }
+
+    private void preencherTabelaProdutos(List<Produto> lista) {
+        DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
+        modelo.setRowCount(0);
+
+        for (Produto p : lista) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getPrecoUnitario(),
+                p.getUnidade(),
+                p.getCategoria().getNome()
+            });
+        }
+    }
+
+    private void setTabelaPorCategoria() {
+        TabelaRelatorio.setModel(new DefaultTableModel(
+            new Object[][]{},
+            new String[] {"Categoria", "Quantidade de Produtos"}
+        ));
+    }
+
     public FrmRelatorio() {
         initComponents();
+    }
+    
+    private void gerarRelatorio() {
+        try {
+            RemoteRelatorio relService = RMICliente.getRelatorioService();
+            String opcao = JCSeletor.getSelectedItem().toString();
+
+            switch (opcao) {
+
+                case "Produtos abaixo da quantidade minima":
+                    setTabelaAbaixoAcima();
+                    preencherTabelaProdutos(relService.produtosAbaixoMinimo());
+                    break;
+
+                case "Produto acima da quantidade maxima":
+                    setTabelaAbaixoAcima();
+                    preencherTabelaProdutos(relService.produtosAcimaMaximo());
+                    break;
+
+                case "Balanço Físico e Financeiro dos produtos":
+                    setTabelaBalanco();
+                    preencherTabelaBalanco(relService.relatorioBalanco());
+                    break;
+
+                case "Lista de Preços dos produtos":
+                    setTabelaListaPrecos();
+                    preencherTabelaProdutos(relService.listarPrecos());
+                    break;
+
+                case "Relação de produtos por categoria":
+                    setTabelaPorCategoria();
+                    preencherTabelaPorCategoria(relService.produtosPorCategoria());
+                    break;
+
+                default:
+                    JOptionPane.showMessageDialog(this, "Relatório não implementado.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Erro ao gerar relatório: " + e.getMessage(),
+                "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -242,7 +280,7 @@ private void setTabelaPorCategoria() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JCSeletorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JCSeletorActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_JCSeletorActionPerformed
 
     private void JBGerarRelatótiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBGerarRelatótiosActionPerformed
