@@ -8,7 +8,10 @@ import com.sdm.cliente.RMICliente;
 import com.sdm.model.Categoria;
 import com.sdm.server.RemoteProduto;
 import com.sdm.model.Produto;
+import com.sdm.server.RemoteCategoria;
 import com.sdm.server.RemoteProduto;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,8 +25,21 @@ public class FrmCriarProduto extends javax.swing.JFrame {
     /**
      * Creates new form FrmCriarProduto
      */
+    
     public FrmCriarProduto() {
         initComponents();
+ 
+        try {
+            RemoteCategoria service = RMICliente.getCategoriaService();
+            List<Categoria> lista = service.listar();
+            
+            for (Categoria c : lista) {
+                ComboCategoria.addItem(c.toString());
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -269,8 +285,7 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         int qtdAtual = Integer.parseInt(JTFAtual.getText());
         int qtdMin = Integer.parseInt(JTFMinima.getText());
         int qtdMax = Integer.parseInt(JTFMaxima.getText());
-        Categoria categoria = (Categoria) ComboCategoria.getSelectedItem();
-     
+        String categoria = ComboCategoria.getSelectedItem().toString();
 
         Produto p = new Produto(
                 0,
