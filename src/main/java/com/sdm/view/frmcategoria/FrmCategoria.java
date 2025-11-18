@@ -270,6 +270,11 @@ private void limparCampos() {
         JBApagar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         JBApagar.setForeground(new java.awt.Color(204, 204, 255));
         JBApagar.setText("Apagar");
+        JBApagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBApagarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -365,12 +370,16 @@ private void limparCampos() {
     }
 
     int id = (int) JTableCategoria.getValueAt(linha, 0);
-
     String nome = JTextNomeEdit.getText();
 
-    TamanhoProduto tamanho = TamanhoProduto.valueOf(ComboTamanho2.getSelectedItem().toString());
-    EmbalagemProduto embalagem = EmbalagemProduto.valueOf(ComboEmbalagem2.getSelectedItem().toString());
+    TamanhoProduto tamanho = TamanhoProduto.fromString(
+            ComboTamanho2.getSelectedItem().toString()
+    );
 
+    EmbalagemProduto embalagem = EmbalagemProduto.fromString(
+            ComboEmbalagem2.getSelectedItem().toString()
+    );
+    
     Categoria c = new Categoria(id, nome, tamanho, embalagem);
 
     RemoteCategoria service = (RemoteCategoria) RMICliente.getCategoriaService();
@@ -432,6 +441,50 @@ private void limparCampos() {
         JOptionPane.showMessageDialog(this, "Erro ao criar categoria: " + e.getMessage());
     }
     }//GEN-LAST:event_JBCadastrarActionPerformed
+
+    private void JBApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBApagarActionPerformed
+        // TODO add your handling code here:
+        try {
+        int linha = JTableCategoria.getSelectedRow();
+
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Selecione uma categoria na tabela!");
+            return;
+        }
+
+        // Pega o ID da categoria (coluna 0 da tabela)
+        int idCategoria = (int) JTableCategoria.getValueAt(linha, 0);
+
+        // Pergunta ao usuário
+        int confirma = JOptionPane.showConfirmDialog(this,
+                "Deseja realmente excluir esta categoria?",
+                "Confirmar exclusão",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirma != JOptionPane.YES_OPTION) {
+            return; // usuário cancelou
+        }
+
+        // Chama o backend via RMI
+        RemoteCategoria service = RMICliente.getCategoriaService();
+        service.deletar(idCategoria);
+
+        JOptionPane.showMessageDialog(this, 
+                "Categoria excluída com sucesso!");
+
+        // Atualiza a tabela
+        carregarTabela();
+
+        // Limpa os campos
+        limparCampos();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, 
+                "Erro ao excluir categoria: " + e.getMessage());
+    }
+    }//GEN-LAST:event_JBApagarActionPerformed
 
     private void tblCategoriasMouseClicked(java.awt.event.MouseEvent evt) {
     int linha = JTableCategoria.getSelectedRow();
