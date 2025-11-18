@@ -5,6 +5,7 @@
 package com.sdm.view.frmproduto;
 
 import com.sdm.cliente.RMICliente;
+import com.sdm.model.Categoria;
 import com.sdm.server.RemoteProduto;
 import com.sdm.model.Produto;
 import com.sdm.server.RemoteProduto;
@@ -48,9 +49,9 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         JTFAtual = new javax.swing.JTextField();
         JTFMinima = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        JTFCategoria = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         JTFMaxima = new javax.swing.JTextField();
+        ComboCategoria = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         JBSair = new javax.swing.JButton();
         JBCriar = new javax.swing.JButton();
@@ -106,16 +107,18 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
         jLabel7.setText("Categoria:");
 
-        JTFCategoria.setBackground(new java.awt.Color(0, 0, 0));
-        JTFCategoria.setForeground(new java.awt.Color(204, 204, 255));
-        JTFCategoria.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
-
         jLabel8.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
         jLabel8.setText("Quantidade máxima em estoque:");
 
         JTFMaxima.setBackground(new java.awt.Color(0, 0, 0));
         JTFMaxima.setForeground(new java.awt.Color(204, 204, 255));
         JTFMaxima.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+
+        ComboCategoria.setBackground(new java.awt.Color(0, 0, 0));
+        ComboCategoria.setEditable(true);
+        ComboCategoria.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        ComboCategoria.setForeground(new java.awt.Color(204, 204, 255));
+        ComboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar", "Pequeno", "Médio", "Grande" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -140,9 +143,8 @@ public class FrmCriarProduto extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(JTFAtual, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JTFMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(JTFCategoria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                                .addComponent(JTFMaxima, javax.swing.GroupLayout.Alignment.LEADING)))
+                            .addComponent(JTFMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ComboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(121, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -186,11 +188,14 @@ public class FrmCriarProduto extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JCBUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JTFCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(65, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JCBUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(ComboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
@@ -264,7 +269,7 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         int qtdAtual = Integer.parseInt(JTFAtual.getText());
         int qtdMin = Integer.parseInt(JTFMinima.getText());
         int qtdMax = Integer.parseInt(JTFMaxima.getText());
-        String categoria = JTFCategoria.getText();
+        Categoria categoria = (Categoria) ComboCategoria.getSelectedItem();
      
 
         Produto p = new Produto(
@@ -323,12 +328,12 @@ public class FrmCriarProduto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboCategoria;
     private javax.swing.JButton JBCriar;
     private javax.swing.JButton JBSair;
     private javax.swing.JComboBox<String> JCBUnidade;
     private javax.swing.JTextField JFTNome;
     private javax.swing.JTextField JTFAtual;
-    private javax.swing.JTextField JTFCategoria;
     private javax.swing.JTextField JTFMaxima;
     private javax.swing.JTextField JTFMinima;
     private javax.swing.JTextField JTFPesoUnidade;

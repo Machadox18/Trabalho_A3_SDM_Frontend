@@ -1,11 +1,10 @@
-package com.sdm.cliente;
+package com.sdm.server;
 
-import com.sdm.model.Movimentacao;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteMovimentacao extends Remote {
 
-    boolean registrarMovimentacao(Movimentacao m) throws RemoteException;
+    boolean registrarMovimentacao(int produtoId, int quantidade, String tipo, String dataStr) throws RemoteException;
 }

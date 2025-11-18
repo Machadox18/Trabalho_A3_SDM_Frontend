@@ -1,4 +1,4 @@
-package com.sdm.cliente;
+package com.sdm.server;
 
 import com.sdm.model.Produto;
 
@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface RemoteProduto extends Remote {
 
-    List<Produto> listarProdutos() throws RemoteException;
-    Produto buscarProdutoPorId(int id) throws RemoteException;
-    void inserirProduto(Produto p) throws RemoteException;
-    void atualizarProduto(Produto p) throws RemoteException;
-    boolean excluirProduto(int id) throws RemoteException;
+    List<Produto> listar() throws RemoteException;
+    Produto buscarPorId(int id) throws RemoteException;
+    void inserir(Produto p) throws RemoteException;
+    void atualizar(Produto p) throws RemoteException;
+    boolean deletar(int id) throws RemoteException;
 
 }

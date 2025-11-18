@@ -5,8 +5,9 @@
 package com.sdm.view.frmrelatorio;
 
 import com.sdm.cliente.RMICliente;
-import com.sdm.cliente.RemoteRelatorio;
+import com.sdm.server.RemoteRelatorio;
 import com.sdm.model.Produto;
+import com.sdm.server.RemoteRelatorio;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -223,7 +224,7 @@ private void preencherTabelaBalanco(Map<String, Object> dados) {
                 break;
 
             case "Balanço Físico e Financeiro dos produtos":
-                Map<String, Object> balanco = relService.relatorioBalanco();
+                Map<String, Object> balanco = (Map<String, Object>) relService.relatorioBalanco();
                 preencherTabelaBalanco(balanco);
                 break;
 

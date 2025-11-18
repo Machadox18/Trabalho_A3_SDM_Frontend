@@ -5,8 +5,8 @@
 package com.sdm.view.frmmovimentar;
 
 import com.sdm.cliente.RMICliente;
-import com.sdm.cliente.RemoteMovimentacao;
-import com.sdm.cliente.RemoteProduto;
+import com.sdm.server.RemoteMovimentacao;
+import com.sdm.server.RemoteProduto;
 import com.sdm.model.Movimentacao;
 import com.sdm.model.Produto;
 import javax.swing.table.DefaultTableModel;
@@ -18,20 +18,20 @@ import javax.swing.JOptionPane;
 public class FrmMovimentar extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMovimentar.class.getName());
-   private RemoteProduto produtoService = RMICliente.getProdutoService();
-   private RemoteMovimentacao movimentacaoService = RMICliente.getMovimentacaoService();
+   private RemoteProduto produtoService = (RemoteProduto) RMICliente.getProdutoService();
+   private RemoteMovimentacao movimentacaoService = (RemoteMovimentacao) RMICliente.getMovimentacaoService();
     /**
      * Creates new form FrmMovimentar
      */
     public FrmMovimentar() {
         initComponents();
     try {
-    produtoService = RMICliente.getProdutoService();
-    movimentacaoService = RMICliente.getMovimentacaoService();
+    produtoService = (RemoteProduto) RMICliente.getProdutoService();
+    movimentacaoService = (RemoteMovimentacao) RMICliente.getMovimentacaoService();
 
     ComboProdutos.removeAllItems();
 
-    for (Produto p : produtoService.listarProdutos()) {
+    for (Produto p : produtoService.listar()) {
         ComboProdutos.addItem(p.getId() + " - " + p.getNome());
     }
 
@@ -46,7 +46,7 @@ public class FrmMovimentar extends javax.swing.JFrame {
     private void carregarProdutosNoCombo() {
     try {
         ComboProdutos.removeAllItems();
-        produtoService.listarProdutos().forEach(p -> {
+        produtoService.listar().forEach(p -> {
             ComboProdutos.addItem(p.getId() + " - " + p.getNome());
         });
     } catch (Exception e) {
@@ -360,7 +360,7 @@ public class FrmMovimentar extends javax.swing.JFrame {
         int produtoId = Integer.parseInt(item.split(" - ")[0]);  // Pega o ID antes do hífen
 
         // Chamada RMI correta
-        Produto p = RMICliente.getProdutoService().buscarProdutoPorId(produtoId);
+        Produto p = RMICliente.getProdutoService().buscarPorId(produtoId);
 
         // Pegando o modelo da tabela
         DefaultTableModel model = (DefaultTableModel) JTableList.getModel();
@@ -401,7 +401,7 @@ public class FrmMovimentar extends javax.swing.JFrame {
         int produtoId = Integer.parseInt(item.split(" - ")[0]); // "3 - Arroz" -> pega 3
 
         // chamada ao serviço RMI para buscar o produto
-        Produto p = RMICliente.getProdutoService().buscarProdutoPorId(produtoId);
+        Produto p = RMICliente.getProdutoService().buscarPorId(produtoId);
 
         DefaultTableModel model = (DefaultTableModel) JTableList.getModel();
         model.setRowCount(0); // limpa tabela

@@ -1,11 +1,10 @@
-package com.sdm.cliente;
+package com.sdm.server;
 
 import com.sdm.model.Produto;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Map;
 
 public interface RemoteRelatorio extends Remote {
 
@@ -15,5 +14,5 @@ public interface RemoteRelatorio extends Remote {
 
     List<Produto> relatorioMovimentacoes() throws RemoteException;
 
-    Map<String, Object> relatorioBalanco() throws RemoteException;
+    List<Produto> relatorioBalanco() throws RemoteException;
 }

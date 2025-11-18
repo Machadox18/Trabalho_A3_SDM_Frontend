@@ -5,11 +5,13 @@
 package com.sdm.view.frmcategoria;
 
 import com.sdm.cliente.RMICliente;
-import com.sdm.cliente.RemoteCategoria;
 import com.sdm.model.Categoria;
 import com.sdm.model.EmbalagemProduto;
 import com.sdm.model.TamanhoProduto;
+import com.sdm.server.RemoteCategoria;
+import java.util.Arrays;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,11 +28,18 @@ public class FrmCategoria extends javax.swing.JFrame {
      */
     public FrmCategoria() {
         initComponents();
+        ComboTamanho.setModel(
+    new DefaultComboBoxModel<>(
+        Arrays.stream(TamanhoProduto.values())
+              .map(TamanhoProduto::toString)
+              .toArray(String[]::new)
+    )
+);
     }
 private void carregarTabela() {
     try {
-        RemoteCategoria service = RMICliente.getCategoriaService();
-        List<Categoria> categorias = service.listarCategorias();
+        RemoteCategoria service = (RemoteCategoria) RMICliente.getCategoriaService();
+        List<Categoria> categorias = service.listar();
 
         DefaultTableModel modelo = (DefaultTableModel) JTableCategoria.getModel();
         modelo.setRowCount(0);
@@ -364,8 +373,8 @@ private void limparCampos() {
 
     Categoria c = new Categoria(id, nome, tamanho, embalagem);
 
-    RemoteCategoria service = RMICliente.getCategoriaService();
-    service.alterarCategoria(c);
+    RemoteCategoria service = (RemoteCategoria) RMICliente.getCategoriaService();
+    service.atualizar(c);
 
     JOptionPane.showMessageDialog(this, "Categoria alterada com sucesso!");
     carregarTabela();
@@ -383,22 +392,44 @@ private void limparCampos() {
 
     private void JBCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCadastrarActionPerformed
         // TODO add your handling code here:
-        try {
+       try {
         String nome = JTextNomeCad.getText();
-        TamanhoProduto tamanho = TamanhoProduto.valueOf(ComboTamanho.getSelectedItem().toString());
-        EmbalagemProduto embalagem = EmbalagemProduto.valueOf(ComboEmbalagem.getSelectedItem().toString());
+        String tamanhoStr = ComboTamanho.getSelectedItem().toString();
 
-        Categoria c = new Categoria(0, nome, tamanho, embalagem);
+        // Converter String -> TamanhoProduto
+        TamanhoProduto tamanho = null;
+        for (TamanhoProduto t : TamanhoProduto.values()) {
+            if (t.toString().equalsIgnoreCase(tamanhoStr)) {
+                tamanho = t;
+                break;
+            }
+        }
+        
+        // --- CONVERTER EMBALAGEM ---
+        String embalagemStr = ComboEmbalagem.getSelectedItem().toString();
+        EmbalagemProduto embalagem = null;
+        for (EmbalagemProduto e : EmbalagemProduto.values()) {
+            if (e.toString().equalsIgnoreCase(embalagemStr)) {
+                embalagem = e;
+                break;
+
+            }
+        }
+
+        Categoria c = new Categoria();
+        c.setNome(nome);
+        c.setTamanho(tamanho);
+        c.setEmbalagem(embalagem);
 
         RemoteCategoria service = RMICliente.getCategoriaService();
-        service.inserirCategoria(c);
+        service.inserir(c);
 
-        JOptionPane.showMessageDialog(this, "Categoria cadastrada com sucesso!");
-        limparCampos();
+        JOptionPane.showMessageDialog(this, "Categoria criada!");
         carregarTabela();
+        limparCampos();
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao cadastrar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Erro ao criar categoria: " + e.getMessage());
     }
     }//GEN-LAST:event_JBCadastrarActionPerformed
 

@@ -1,5 +1,9 @@
 package com.sdm.cliente;
 
+import com.sdm.server.RemoteCategoria;
+import com.sdm.server.RemoteMovimentacao;
+import com.sdm.server.RemoteProduto;
+import com.sdm.server.RemoteRelatorio;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -60,7 +64,7 @@ public class RMICliente {
         System.out.println("Produtos cadastrados:");
 
         // Chama o serviço remoto diretamente
-        getProdutoService().listarProdutos().forEach(p ->
+        getProdutoService().listar().forEach(p ->
                 System.out.println(" - " + p.getNome())
         );
 

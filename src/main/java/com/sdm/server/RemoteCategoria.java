@@ -1,4 +1,4 @@
-package com.sdm.cliente;
+package com.sdm.server;
 
 import com.sdm.model.Categoria;
 
@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface RemoteCategoria extends Remote {
 
-    List<Categoria> listarCategorias() throws RemoteException;
-    Categoria buscarCategoriaPorId(int id) throws RemoteException;
-    void inserirCategoria(Categoria c) throws RemoteException;
-    boolean atualizarCategoria(Categoria c) throws RemoteException;
-    boolean excluirCategoria(int id) throws RemoteException;
+    List<Categoria> listar() throws RemoteException;
+    Categoria buscarPorId(int id) throws RemoteException;
+    void inserir(Categoria c) throws RemoteException;
+    boolean atualizar(Categoria c) throws RemoteException;
+    boolean deletar(int id) throws RemoteException;
 }
