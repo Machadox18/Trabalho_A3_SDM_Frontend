@@ -280,7 +280,7 @@ public class FrmRelatorio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JCSeletorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JCSeletorActionPerformed
-        
+        gerarRelatorio(); // ← Atualiza a tabela automaticamente
     }//GEN-LAST:event_JCSeletorActionPerformed
 
     private void JBGerarRelatótiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBGerarRelatótiosActionPerformed
