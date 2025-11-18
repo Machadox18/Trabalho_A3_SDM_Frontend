@@ -6,11 +6,12 @@ package com.sdm.view.frmproduto;
 
 import com.sdm.cliente.RMICliente;
 import com.sdm.model.Categoria;
-import com.sdm.server.RemoteProduto;
 import com.sdm.model.Produto;
 import com.sdm.server.RemoteCategoria;
 import com.sdm.server.RemoteProduto;
+import java.rmi.RemoteException;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -28,19 +29,38 @@ public class FrmCriarProduto extends javax.swing.JFrame {
     
     public FrmCriarProduto() {
         initComponents();
- 
+        mostrarCategorias();
+    }
+        
+    public void mostrarCategorias() {
+            
+        DefaultComboBoxModel<Categoria> modelo = new DefaultComboBoxModel<>();
+        modelo.addElement(null);
+
         try {
             RemoteCategoria service = RMICliente.getCategoriaService();
-            List<Categoria> lista = service.listar();
+            List<Categoria> categorias = service.listar();
             
-            for (Categoria c : lista) {
-                ComboCategoria.addItem(c.toString());
+            for (Categoria c : categorias) {
+                modelo.addElement(c);
             }
             
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+             ComboCategoria.setModel(modelo);
+
+           } catch (RemoteException e) {
+        logger.log(Level.SEVERE, "Erro ao carregar categorias via RMI.", e);
+        JOptionPane.showMessageDialog(this, 
+                "Erro ao carregar categorias: " + e.getMessage(), 
+                "Erro de Comunicação", 
+                JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        logger.log(Level.SEVERE, "Erro inesperado ao carregar categorias.", e);
+        JOptionPane.showMessageDialog(this, 
+                "Erro inesperado: " + e.getMessage(), 
+                "Erro", 
+                JOptionPane.ERROR_MESSAGE);
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,7 +154,6 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         ComboCategoria.setEditable(true);
         ComboCategoria.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
         ComboCategoria.setForeground(new java.awt.Color(204, 204, 255));
-        ComboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar", "Pequeno", "Médio", "Grande" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -285,7 +304,7 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         int qtdAtual = Integer.parseInt(JTFAtual.getText());
         int qtdMin = Integer.parseInt(JTFMinima.getText());
         int qtdMax = Integer.parseInt(JTFMaxima.getText());
-        String categoria = ComboCategoria.getSelectedItem().toString();
+        Categoria categoria = (Categoria) ComboCategoria.getSelectedItem();
 
         Produto p = new Produto(
                 0,
@@ -343,7 +362,7 @@ public class FrmCriarProduto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> ComboCategoria;
+    private javax.swing.JComboBox<Categoria> ComboCategoria;
     private javax.swing.JButton JBCriar;
     private javax.swing.JButton JBSair;
     private javax.swing.JComboBox<String> JCBUnidade;
