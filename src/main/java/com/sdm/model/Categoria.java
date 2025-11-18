@@ -14,11 +14,18 @@ public class Categoria implements Serializable{
 
     // Atributo privado que representa a embalagem do produto (também pode ser enum ou classe).
     private EmbalagemProduto embalagem;
+    
+    private int totalProdutos;
 
     // Construtor vazio (padrão), necessário para alguns frameworks ou para criar objetos sem inicializar os campos.
     public Categoria() {
     }
 
+    public Categoria(String nomeCategoria, int totalProdutos) {
+    this.nome = nomeCategoria;
+    this.totalProdutos = totalProdutos;
+    }
+    
     // Construtor com parâmetros para inicializar todos os atributos da classe.
     public Categoria(int id, String nome, TamanhoProduto tamanho, EmbalagemProduto embalagem) {
         this.id = id;
@@ -72,6 +79,14 @@ public class Categoria implements Serializable{
         this.embalagem = embalagem;
     }
 
+    public int getTotalProdutos() {
+    return totalProdutos;
+    }
+
+    public void setTotalProdutos(int totalProdutos) {
+    this.totalProdutos = totalProdutos;
+    }
+    
     // Método sobrescrito que retorna uma representação em texto (string) do objeto Categoria.
     @Override
     public String toString() {

@@ -5,11 +5,10 @@
 package com.sdm.view.frmrelatorio;
 
 import com.sdm.cliente.RMICliente;
-import com.sdm.server.RemoteRelatorio;
+import com.sdm.model.Categoria;
 import com.sdm.model.Produto;
 import com.sdm.server.RemoteRelatorio;
 import java.util.List;
-import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,17 +43,51 @@ private void preencherTabelaBalanco(List<Produto> lista) {
     modelo.setRowCount(0);
 
     for (Produto p : lista) {
+        double total = p.getQuantidadeEstoque() * p.getPrecoUnitario();
+        
         modelo.addRow(new Object[]{
-            p.getId(),
-            p.getNome(),
-            p.getCategoria().getNome(),
+           p.getNome(),
+            p.getQuantidadeEstoque(),
             p.getPrecoUnitario(),
-            p.getQuantidadeEstoque()
+            total
         });
     }
     
 }  
 
+private void preencherTabelaPorCategoria(List<Categoria> lista) {
+    DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
+    modelo.setRowCount(0);
+
+    for (Categoria c : lista) {
+        modelo.addRow(new Object[]{
+            c.getNome(),
+            c.getTotalProdutos()
+        });
+    }
+}
+
+private void preencherTabelaProdutos(List<Produto> lista) {
+    DefaultTableModel modelo = (DefaultTableModel) TabelaRelatorio.getModel();
+    modelo.setRowCount(0);
+
+    for (Produto p : lista) {
+        modelo.addRow(new Object[]{
+            p.getId(),
+            p.getNome(),
+            p.getPrecoUnitario(),
+            p.getUnidade(),
+            p.getCategoria().getNome()
+        });
+    }
+}
+
+private void setTabelaPorCategoria() {
+    TabelaRelatorio.setModel(new DefaultTableModel(
+        new Object[][]{},
+        new String[] {"Categoria", "Quantidade de Produtos"}
+    ));
+}
 
 /**
      * Creates new form FrmRelatooriooo
@@ -216,36 +249,38 @@ private void preencherTabelaBalanco(List<Produto> lista) {
         // TODO add your handling code here:
         try {
         RemoteRelatorio relService = RMICliente.getRelatorioService();
-
         String opcao = JCSeletor.getSelectedItem().toString();
 
         switch (opcao) {
 
+            // ✔ PRODUTOS ABAIXO DO MÍNIMO
             case "Produtos abaixo da quantidade minima":
-                List<Produto> abaixo = relService.produtosAbaixoMinimo();
-                preencherTabelaProdutos(abaixo);
+                setTabelaAbaixoAcima();
+                preencherTabelaProdutos(relService.produtosAbaixoMinimo());
                 break;
 
+            // ✔ PRODUTOS ACIMA DO MÁXIMO
             case "Produto acima da quantidade maxima":
-                List<Produto> acima = relService.produtosAcimaMaximo();
-                preencherTabelaProdutos(acima);
+                setTabelaAbaixoAcima();
+                preencherTabelaProdutos(relService.produtosAcimaMaximo());
                 break;
 
+            // ✔ BALANÇO FÍSICO/FINANCEIRO
             case "Balanço Físico e Financeiro dos produtos":
-                Map<String, Object> balanco = (Map<String, Object>) relService.relatorioBalanco();
-                preencherTabelaBalanco(balanco);
+                setTabelaBalanco();
+                preencherTabelaBalanco(relService.relatorioBalanco());
                 break;
 
+            // ✔ LISTA DE PREÇOS
             case "Lista de Preços dos produtos":
-                // usa o relatório de movimentações, já que não existe um método específico
-                List<Produto> movs = relService.relatorioMovimentacoes();
-                preencherTabelaProdutos(movs);
+                setTabelaListaPrecos();
+                preencherTabelaProdutos(relService.listarPrecos());
                 break;
 
+            // ✔ RELAÇÃO PRODUTOS POR CATEGORIA
             case "Relação de produtos por categoria":
-                // Também usa relatorioMovimentacoes() pois não existe outro método
-                List<Produto> porCategoria = relService.relatorioMovimentacoes();
-                preencherTabelaProdutos(porCategoria);
+                setTabelaPorCategoria();
+                preencherTabelaPorCategoria(relService.produtosPorCategoria());
                 break;
 
             default:
@@ -256,8 +291,10 @@ private void preencherTabelaBalanco(List<Produto> lista) {
         JOptionPane.showMessageDialog(this,
                 "Erro ao gerar relatório: " + e.getMessage(),
                 "Erro", JOptionPane.ERROR_MESSAGE);
+
         e.printStackTrace();
     }
+       
     }//GEN-LAST:event_JBGerarRelatótiosActionPerformed
 
     private void JBVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBVoltarActionPerformed
