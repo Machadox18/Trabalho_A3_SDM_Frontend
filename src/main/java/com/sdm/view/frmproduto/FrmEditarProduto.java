@@ -7,6 +7,7 @@ package com.sdm.view.frmproduto;
 import com.sdm.cliente.RMICliente;
 import com.sdm.model.Categoria;
 import com.sdm.model.Produto;
+import com.sdm.server.RemoteCategoria;
 import com.sdm.server.RemoteProduto;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -23,34 +24,111 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     /**
      * Creates new form FrmEditarProduto
      */
+    
+    private Produto produtoSelecionado;
+    private int idCategoriaSelecionada;
+    private List<Categoria> listaCategorias;
+    
     public FrmEditarProduto() {
         initComponents();
+        carregarCategorias();       
+        carregarTabelaProdutos();   
+        adicionarListenerTabela();  
+        this.setLocationRelativeTo(null); 
     }
     
-    public void carregarTabela() {
+    private void carregarCategorias() {
+        try {
+            JCBUnidade.removeAllItems();
+            
+            JCBUnidade.addItem("Kg");
+            JCBUnidade.addItem("g");
+            JCBUnidade.addItem("L");
+            JCBUnidade.addItem("ml");
+            
+             RemoteCategoria service = RMICliente.getCategoriaService();
+             listaCategorias = service.listar();
+
+             for (Categoria c : listaCategorias) {
+                JCBUnidade.addItem(c.getNome());
+        }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar categorias: " + e.getMessage(), "Erro de Categoria", JOptionPane.ERROR_MESSAGE);
+            logger.severe("Erro ao carregar categorias: " + e.getMessage());
+        }
+    }
+
+   private void carregarTabelaProdutos() {
         try {
             RemoteProduto service = (RemoteProduto) RMICliente.getProdutoService();
             List<Produto> produtos = service.listar();
-            
-            
+
             DefaultTableModel modelo = (DefaultTableModel) JTableProduto.getModel();
             modelo.setRowCount(0);
-            
+
             for (Produto p : produtos) {
                 modelo.addRow(new Object[]{
                     p.getId(),
                     p.getNome(),
                     p.getPrecoUnitario(),
-                    p.getCategoria().getEmbalagem(),
+                    p.getCategoria() != null ? p.getCategoria().getEmbalagem() : "", 
                     p.getQuantidadeEstoque(),
                     p.getQuantidadeMinima(),
                     p.getQuantidadeMaxima(),
-                    p.getCategoria()
+                    p.getCategoria() != null ? p.getCategoria().getNome() : "" 
                 });
-            
-            }  
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar produtos: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao carregar produtos: " + e.getMessage(), 
+                "Erro de RMI", JOptionPane.ERROR_MESSAGE);
+            logger.severe("Erro ao carregar produtos: " + e.getMessage());
+        }
+   }
+    
+    private void adicionarListenerTabela() {
+        JTableProduto.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int linha = JTableProduto.getSelectedRow();
+                if (linha != -1) {
+                    preencherCampos(linha);
+                }
+            }
+        });
+    }
+
+    private void preencherCampos(int linha) {
+        DefaultTableModel modelo = (DefaultTableModel) JTableProduto.getModel();
+        try {
+            int idProduto = (Integer) modelo.getValueAt(linha, 0);
+            String nome = JTFNome.getText();
+            
+            RemoteProduto service = (RemoteProduto) RMICliente.getProdutoService();
+            produtoSelecionado = service.buscarPorId(idProduto);
+ 
+            if (produtoSelecionado != null) {
+                JTFNome.setText(produtoSelecionado.getNome());
+                JTFPreco.setText(String.valueOf(produtoSelecionado.getPrecoUnitario()));
+                JTFAtual.setText(String.valueOf(produtoSelecionado.getQuantidadeEstoque()));
+                JTFMinima.setText(String.valueOf(produtoSelecionado.getQuantidadeMinima()));
+                JTFMaxima.setText(String.valueOf(produtoSelecionado.getQuantidadeMaxima()));
+                JCBUnidade.setSelectedItem(produtoSelecionado.getUnidade());
+                
+                  if (produtoSelecionado.getCategoria() != null) {
+                    idCategoriaSelecionada = produtoSelecionado.getCategoria().getId();
+                }
+
+                JBAlterar.setEnabled(true);
+                JBApagar.setEnabled(true);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao buscar produto: " + e.getMessage(), 
+                "Erro de RMI", JOptionPane.ERROR_MESSAGE);
+            logger.severe("Erro ao buscar produto: " + e.getMessage());
         }
     }
 
@@ -60,6 +138,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JTFMaxima.setText("");
         JTFAtual.setText("");
         JTFMinima.setText("");
+        JCBUnidade.setSelectedIndex(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -332,7 +411,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, 
             "Produto excluído com sucesso!");
         
-        carregarTabela();
+        carregarTabelaProdutos();
         
         limparCampos();
         
