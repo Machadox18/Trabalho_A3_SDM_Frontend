@@ -4,6 +4,14 @@
  */
 package com.sdm.view.frmproduto;
 
+import com.sdm.model.Categoria;
+import com.sdm.model.Produto;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Master
@@ -15,8 +23,91 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     /**
      * Creates new form FrmEditarProduto
      */
+    // Variáveis para armazenar o produto selecionado e o ID da Categoria
+    private Produto produtoSelecionado;
+    private int idCategoriaSelecionada;
+    private List<Categoria> listaCategorias; // Para manter a lista de categorias carregadas
+
+    
+    // Método para carregar a lista de categorias e popular o ComboBox (necessário para o UPDATE)
+    private void carregarCategorias() {
+        try {
+            // Supondo que você tem um método listarCategorias no ServiceFacade
+            
+            JCBUnidade.removeAllItems(); // Remove "Selecionar", "Kg", "g", etc.
+            
+            // Adiciona as unidades fixas (ou crie um ComboBox separado para as Categorias)
+            JCBUnidade.addItem("Kg");
+            JCBUnidade.addItem("g");
+            JCBUnidade.addItem("L");
+            JCBUnidade.addItem("ml");
+            
+            // Se você tiver um ComboBox para Categoria, implemente a lógica aqui
+            // Ex: JCBCategoria.addItem(c.getNome()); 
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar categorias: " + e.getMessage(), "Erro de Categoria", JOptionPane.ERROR_MESSAGE);
+            logger.severe("Erro ao carregar categorias: " + e.getMessage());
+        }
+    }
+
+    // Método para popular a JTable com os dados dos Produtos
+    private void carregarTabelaProdutos() {
+       
+    }
+    
+    // Adiciona o Listener para o clique na tabela
+    private void adicionarListenerTabela() {
+        jTable1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int linha = jTable1.getSelectedRow();
+                if (linha != -1) {
+                    preencherCampos(linha);
+                }
+            }
+        });
+    }
+
+    // Preenche os campos de texto com os dados da linha selecionada
+    private void preencherCampos(int linha) {
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        try {
+            int idProduto = (Integer) modelo.getValueAt(linha, 0);
+            
+            // Busca o produto completo para ter acesso ao objeto Categoria
+           
+            
+            if (produtoSelecionado != null) {
+                JTFNome.setText(produtoSelecionado.getNome());
+                // Formate o preço e o peso para exibição se necessário (ex: Locale)
+                JTFPreco.setText(String.valueOf(produtoSelecionado.getPrecoUnitario()));
+                JTFPeso.setText(String.valueOf(produtoSelecionado.getPeso())); // <<< ASSUMIMOS ESTE CAMPO
+                JTFAtual.setText(String.valueOf(produtoSelecionado.getQuantidadeEstoque()));
+                JTFMinima.setText(String.valueOf(produtoSelecionado.getQuantidadeMinima()));
+                JTFMáxima.setText(String.valueOf(produtoSelecionado.getQuantidadeMaxima()));
+
+                // Seleciona a unidade correta no ComboBox
+                JCBUnidade.setSelectedItem(produtoSelecionado.getUnidade());
+                
+                // Armazena o ID da categoria original para o UPDATE
+                if (produtoSelecionado.getCategoria() != null) {
+                    idCategoriaSelecionada = produtoSelecionado.getCategoria().getId();
+                }
+
+                JBAlterar.setEnabled(true);
+                JBApagar.setEnabled(true);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar produto: " + e.getMessage(), "Erro de RMI", JOptionPane.ERROR_MESSAGE);
+            logger.severe("Erro ao buscar produto: " + e.getMessage());
+        }}
     public FrmEditarProduto() {
         initComponents();
+        carregarCategorias(); // Carrega as categorias no ComboBox
+        carregarTabelaProdutos(); // Popula a tabela
+        adicionarListenerTabela(); // Adiciona o evento de clique na tabela
+        this.setLocationRelativeTo(null);
     }
 
     /**

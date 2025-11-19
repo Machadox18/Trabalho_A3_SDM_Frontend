@@ -294,7 +294,7 @@ public class FrmCriarProduto extends javax.swing.JFrame {
 
     private void JBCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCriarActionPerformed
         // TODO add your handling code here:
-        try {
+        try {    
         String nome = JFTNome.getText();
         double preco = Double.parseDouble(JTFPreco.getText());
         double peso = Double.parseDouble(JTFPesoUnidade.getText());
@@ -304,11 +304,12 @@ public class FrmCriarProduto extends javax.swing.JFrame {
         int qtdMin = Integer.parseInt(JTFMinima.getText());
         int qtdMax = Integer.parseInt(JTFMaxima.getText());
         Categoria categoria = (Categoria) ComboCategoria.getSelectedItem();
-
+  
         Produto p = new Produto(
                 0,
                 nome,
                 preco,
+                peso,
                 unidade,
                 qtdAtual,
                 qtdMin,
