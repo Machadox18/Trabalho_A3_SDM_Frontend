@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.sdm.view.frmcategoria;
 
 import com.sdm.cliente.RMICliente;
@@ -9,9 +5,7 @@ import com.sdm.model.Categoria;
 import com.sdm.model.EmbalagemProduto;
 import com.sdm.model.TamanhoProduto;
 import com.sdm.server.RemoteCategoria;
-import java.util.Arrays;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,40 +22,38 @@ public class FrmCategoria extends javax.swing.JFrame {
      */
     public FrmCategoria() {
         initComponents();
-        ComboTamanho.setModel(
-    new DefaultComboBoxModel<>(
-        Arrays.stream(TamanhoProduto.values())
-              .map(TamanhoProduto::toString)
-              .toArray(String[]::new)
-    )
-);
+        carregarTabela();
     }
-private void carregarTabela() {
-    try {
-        RemoteCategoria service = (RemoteCategoria) RMICliente.getCategoriaService();
-        List<Categoria> categorias = service.listar();
+    
+    private void carregarTabela() {
+        try {
+            RemoteCategoria service = (RemoteCategoria) RMICliente.getCategoriaService();
+            List<Categoria> categorias = service.listar();
 
-        DefaultTableModel modelo = (DefaultTableModel) JTableCategoria.getModel();
-        modelo.setRowCount(0);
+            DefaultTableModel modelo = (DefaultTableModel) JTableCategoria.getModel();
+            modelo.setRowCount(0);
 
-        for (Categoria c : categorias) {
-            modelo.addRow(new Object[]{
-                c.getId(),
-                c.getNome(),
-                c.getTamanho(),
-                c.getEmbalagem()
-            });
+            for (Categoria c : categorias) {
+                modelo.addRow(new Object[]{
+                    c.getId(),
+                    c.getNome(),
+                    c.getTamanho(),
+                    c.getEmbalagem()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar categorias: " + e.getMessage());
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao carregar categorias: " + e.getMessage());
     }
-}
 
-private void limparCampos() {
-    JTextNomeCad.setText("");
-    ComboTamanho.setSelectedIndex(0);
-    ComboEmbalagem.setSelectedIndex(0);
-}
+    private void limparCampos() {
+        JTextNomeCad.setText("");
+        ComboTamanho.setSelectedIndex(0);
+        ComboEmbalagem.setSelectedIndex(0);
+        JTextNomeEdit.setText("");
+        ComboTamanho2.setSelectedIndex(0);
+        ComboEmbalagem2.setSelectedIndex(0);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -209,6 +201,11 @@ private void limparCampos() {
                 "Id", "Nome", "Tamanho", "Embalagem"
             }
         ));
+        JTableCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTableCategoriaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(JTableCategoria);
 
         jLabel6.setFont(new java.awt.Font("Source Serif Pro", 1, 14)); // NOI18N
@@ -361,140 +358,153 @@ private void limparCampos() {
     }//GEN-LAST:event_ComboEmbalagem2ActionPerformed
 
     private void JBAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBAlterarActionPerformed
-        // TODO add your handling code here:
         try {
-    int linha = JTableCategoria.getSelectedRow();
-    if (linha < 0) {
-        JOptionPane.showMessageDialog(this, "Selecione uma categoria na tabela!");
-        return;
-    }
+            int row = JTableCategoria.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(this, "Selecione uma categoria antes de alterar.");
+                return;
+            }
 
-    int id = (int) JTableCategoria.getValueAt(linha, 0);
-    String nome = JTextNomeEdit.getText();
+            // ID da categoria selecionada
+            int id = Integer.parseInt(JTableCategoria.getValueAt(row, 0).toString());
 
-    TamanhoProduto tamanho = TamanhoProduto.fromString(
-            ComboTamanho2.getSelectedItem().toString()
-    );
+            // Coleta novos valores da interface
+            String nome = JTextNomeEdit.getText();
+            String tamanhoStr = ComboTamanho2.getSelectedItem().toString();
+            String embalagemStr = ComboEmbalagem2.getSelectedItem().toString();
 
-    EmbalagemProduto embalagem = EmbalagemProduto.fromString(
-            ComboEmbalagem2.getSelectedItem().toString()
-    );
-    
-    Categoria c = new Categoria(id, nome, tamanho, embalagem);
+            // ---------- CONVERTER STRING → ENUM ----------
+            // Converte tamanho
+            TamanhoProduto tamanho = null;
+            for (TamanhoProduto t : TamanhoProduto.values()) {
+                if (t.toString().equalsIgnoreCase(tamanhoStr)) {
+                    tamanho = t;
+                    break;
+                }
+            }
 
-    RemoteCategoria service = (RemoteCategoria) RMICliente.getCategoriaService();
-    service.atualizar(c);
+            // Converte embalagem
+            EmbalagemProduto embalagem = null;
+            for (EmbalagemProduto e : EmbalagemProduto.values()) {
+                if (e.toString().equalsIgnoreCase(embalagemStr)) {
+                    embalagem = e;
+                    break;
+                }
+            }
 
-    JOptionPane.showMessageDialog(this, "Categoria alterada com sucesso!");
-    carregarTabela();
+            // Preenche objeto
+            Categoria c = new Categoria();
+            c.setId(id);
+            c.setNome(nome);
+            c.setTamanho(tamanho);
+            c.setEmbalagem(embalagem);
 
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(this, "Erro ao alterar: " + e.getMessage(),
-            "Erro", JOptionPane.ERROR_MESSAGE);
-}
+            // Chama serviço remoto
+            RemoteCategoria service = RMICliente.getCategoriaService();
+            service.atualizar(c);
+
+            JOptionPane.showMessageDialog(this, "Categoria alterada!");
+            carregarTabela();
+            limparCampos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao alterar: " + e.getMessage());
+        }
     }//GEN-LAST:event_JBAlterarActionPerformed
 
     private void JBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCancelarActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_JBCancelarActionPerformed
 
     private void JBCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCadastrarActionPerformed
-        // TODO add your handling code here:
-       try {
-        String nome = JTextNomeCad.getText();
-        String tamanhoStr = ComboTamanho.getSelectedItem().toString();
+        try {
+             String nome = JTextNomeCad.getText();
+             String tamanhoStr = ComboTamanho.getSelectedItem().toString();
 
-        // Converter String -> TamanhoProduto
-        TamanhoProduto tamanho = null;
-        for (TamanhoProduto t : TamanhoProduto.values()) {
-            if (t.toString().equalsIgnoreCase(tamanhoStr)) {
-                tamanho = t;
-                break;
-            }
+             // Converter String -> TamanhoProduto
+             TamanhoProduto tamanho = null;
+             for (TamanhoProduto t : TamanhoProduto.values()) {
+                 if (t.toString().equalsIgnoreCase(tamanhoStr)) {
+                     tamanho = t;
+                     break;
+                 }
+             }
+
+             // --- CONVERTER EMBALAGEM ---
+             String embalagemStr = ComboEmbalagem.getSelectedItem().toString();
+             EmbalagemProduto embalagem = null;
+             for (EmbalagemProduto e : EmbalagemProduto.values()) {
+                 if (e.toString().equalsIgnoreCase(embalagemStr)) {
+                     embalagem = e;
+                     break;
+
+                 }
+             }
+
+             Categoria c = new Categoria();
+             c.setNome(nome);
+             c.setTamanho(tamanho);
+             c.setEmbalagem(embalagem);
+
+             RemoteCategoria service = RMICliente.getCategoriaService();
+             service.inserir(c);
+
+             JOptionPane.showMessageDialog(this, "Categoria criada!");
+             carregarTabela();
+             limparCampos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao criar categoria: " + e.getMessage());
         }
-        
-        // --- CONVERTER EMBALAGEM ---
-        String embalagemStr = ComboEmbalagem.getSelectedItem().toString();
-        EmbalagemProduto embalagem = null;
-        for (EmbalagemProduto e : EmbalagemProduto.values()) {
-            if (e.toString().equalsIgnoreCase(embalagemStr)) {
-                embalagem = e;
-                break;
-
-            }
-        }
-
-        Categoria c = new Categoria();
-        c.setNome(nome);
-        c.setTamanho(tamanho);
-        c.setEmbalagem(embalagem);
-
-        RemoteCategoria service = RMICliente.getCategoriaService();
-        service.inserir(c);
-
-        JOptionPane.showMessageDialog(this, "Categoria criada!");
-        carregarTabela();
-        limparCampos();
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao criar categoria: " + e.getMessage());
-    }
     }//GEN-LAST:event_JBCadastrarActionPerformed
 
     private void JBApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBApagarActionPerformed
-        // TODO add your handling code here:
         try {
-        int linha = JTableCategoria.getSelectedRow();
+            int row = JTableCategoria.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Selecione uma categoria!");
+                return;
+            }
 
-        if (linha < 0) {
-            JOptionPane.showMessageDialog(this, 
-                "Selecione uma categoria na tabela!");
-            return;
+            int id = Integer.parseInt(JTableCategoria.getValueAt(row, 0).toString());
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    this, 
+                    "Deseja realmente apagar a categoria?", 
+                    "Confirmar", 
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                RemoteCategoria service = RMICliente.getCategoriaService();
+                service.deletar(id);
+
+                JOptionPane.showMessageDialog(this, "Categoria apagada!");
+                carregarTabela();
+                limparCampos();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao apagar: " + e.getMessage());
         }
-
-        // Pega o ID da categoria (coluna 0 da tabela)
-        int idCategoria = (int) JTableCategoria.getValueAt(linha, 0);
-
-        // Pergunta ao usuário
-        int confirma = JOptionPane.showConfirmDialog(this,
-                "Deseja realmente excluir esta categoria?",
-                "Confirmar exclusão",
-                JOptionPane.YES_NO_OPTION);
-
-        if (confirma != JOptionPane.YES_OPTION) {
-            return; // usuário cancelou
-        }
-
-        // Chama o backend via RMI
-        RemoteCategoria service = RMICliente.getCategoriaService();
-        service.deletar(idCategoria);
-
-        JOptionPane.showMessageDialog(this, 
-                "Categoria excluída com sucesso!");
-
-        // Atualiza a tabela
-        carregarTabela();
-
-        // Limpa os campos
-        limparCampos();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, 
-                "Erro ao excluir categoria: " + e.getMessage());
-    }
     }//GEN-LAST:event_JBApagarActionPerformed
 
-    private void tblCategoriasMouseClicked(java.awt.event.MouseEvent evt) {
-    int linha = JTableCategoria.getSelectedRow();
+    private void JTableCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableCategoriaMouseClicked
+        int row = JTableCategoria.getSelectedRow();
+        if (row != -1) {
 
-    if (linha >= 0) {
-        JTextNomeEdit.setText(JTableCategoria.getValueAt(linha, 1).toString());
-        ComboTamanho2.setSelectedItem(JTableCategoria.getValueAt(linha, 2).toString());
-        ComboEmbalagem2.setSelectedItem(JTableCategoria.getValueAt(linha, 3).toString());
-    }
-}
+            // Preenche os campos de texto
+            JTextNomeEdit.setText(JTableCategoria.getValueAt(row, 1).toString());
+
+            // Tamanho
+            String tamanho = JTableCategoria.getValueAt(row, 2).toString();
+            ComboTamanho2.setSelectedItem(tamanho);
+
+            // Embalagem
+            String embalagem = JTableCategoria.getValueAt(row, 3).toString();
+            ComboEmbalagem2.setSelectedItem(embalagem);
+        }
+    }//GEN-LAST:event_JTableCategoriaMouseClicked
 
     
     /**
