@@ -8,10 +8,7 @@ import com.sdm.server.RemoteProduto;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Master
- */
+
 public class FrmEditarProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmEditarProduto.class.getName());
