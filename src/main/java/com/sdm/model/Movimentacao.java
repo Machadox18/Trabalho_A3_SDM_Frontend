@@ -15,9 +15,6 @@ public class Movimentacao implements Serializable {
     /** Identificador único da movimentação. */
     private int id;
 
-    /** Nome do produto relacionado à movimentação. */
-    private String nome;
-
     /** ID do produto associado à movimentação. */
     private int produtoId;
 
@@ -44,15 +41,13 @@ public class Movimentacao implements Serializable {
      * Construtor completo.
      *
      * @param id         Identificador da movimentação
-     * @param nome       Nome do produto
      * @param produtoId  ID do produto
      * @param quantidade Quantidade movimentada
      * @param tipo       Tipo da movimentação ("ENTRADA" ou "SAIDA")
      * @param data       Data e hora da movimentação
      */
-    public Movimentacao(int id,String nome,int produtoId, int quantidade, String tipo, LocalDateTime data) {
+    public Movimentacao(int id,int produtoId, int quantidade, String tipo, LocalDateTime data) {
         this.id = id;
-        this.nome = nome;
         this.produtoId = produtoId;
         this.quantidade = quantidade;
         this.tipo = tipo;
@@ -64,12 +59,6 @@ public class Movimentacao implements Serializable {
 
     /** @param id define o ID da movimentação */
     public void setId(int id) { this.id = id; }
-
-    /** @return o nome do produto associado */
-    public String getNome(){ return nome; }
-
-    /** @param nome define o nome do produto associado */
-    public void setNome(String nome) { this.nome = nome; }
 
     /** @return o ID do produto associado */
     public int getProdutoId() { return produtoId; }
