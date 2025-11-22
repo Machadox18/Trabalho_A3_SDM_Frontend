@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.sdm.view.frmproduto;
 
 import com.sdm.cliente.RMICliente;
@@ -9,7 +5,6 @@ import com.sdm.model.Categoria;
 import com.sdm.model.Produto;
 import com.sdm.server.RemoteCategoria;
 import com.sdm.server.RemoteProduto;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,130 +16,83 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmEditarProduto.class.getName());
 
-    /**
-     * Creates new form FrmEditarProduto
-     */
-    
-    private Produto produtoSelecionado;
-    private int idCategoriaSelecionada;
-    private List<Categoria> listaCategorias;
-    
+
     public FrmEditarProduto() {
         initComponents();
-        carregarCategorias();       
-        carregarTabelaProdutos();   
-        adicionarListenerTabela();  
-        this.setLocationRelativeTo(null); 
+        carregarProdutos();
+        carregarCategorias();
     }
+
+    private java.util.List<Categoria> listaCategorias;  // armazena as categorias vindas do servidor
     
-    private void carregarCategorias() {
+    private void carregarProdutos() {
         try {
-            JCBUnidade.removeAllItems();
-            
-            JCBUnidade.addItem("Kg");
-            JCBUnidade.addItem("g");
-            JCBUnidade.addItem("L");
-            JCBUnidade.addItem("ml");
-            
-             RemoteCategoria service = RMICliente.getCategoriaService();
-             listaCategorias = service.listar();
+            // Chamar o serviço remoto
+            com.sdm.server.RemoteProduto service = RMICliente.getProdutoService();
 
-             for (Categoria c : listaCategorias) {
-                JCBUnidade.addItem(c.getNome());
-        }
+            java.util.ArrayList<com.sdm.model.Produto> lista = service.listar();
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar categorias: " + e.getMessage(), "Erro de Categoria", JOptionPane.ERROR_MESSAGE);
-            logger.severe("Erro ao carregar categorias: " + e.getMessage());
-        }
-    }
+            // Obter o modelo da tabela
+            DefaultTableModel model = (DefaultTableModel) JTableProduto.getModel();
+            model.setRowCount(0); // limpar tabela
 
-   private void carregarTabelaProdutos() {
-        try {
-            RemoteProduto service = (RemoteProduto) RMICliente.getProdutoService();
-            List<Produto> produtos = service.listar();
+            // Preencher
+            for (com.sdm.model.Produto p : lista) {
 
-            DefaultTableModel modelo = (DefaultTableModel) JTableProduto.getModel();
-            modelo.setRowCount(0);
+                String categoriaNome = 
+                    (p.getCategoria() != null ? p.getCategoria().getNome() : "Sem categoria");
 
-            for (Produto p : produtos) {
-                modelo.addRow(new Object[]{
+                model.addRow(new Object[]{
                     p.getId(),
                     p.getNome(),
                     p.getPrecoUnitario(),
-                    p.getCategoria() != null ? p.getCategoria().getEmbalagem() : "", 
+                    p.getUnidade(),
                     p.getQuantidadeEstoque(),
                     p.getQuantidadeMinima(),
                     p.getQuantidadeMaxima(),
-                    p.getCategoria() != null ? p.getCategoria().getNome() : "" 
+                    categoriaNome
                 });
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
-                "Erro ao carregar produtos: " + e.getMessage(), 
-                "Erro de RMI", JOptionPane.ERROR_MESSAGE);
-            logger.severe("Erro ao carregar produtos: " + e.getMessage());
+                "Erro ao carregar produtos: " + e.getMessage());
+            e.printStackTrace();
         }
-   }
+    }
+
     
-    private void adicionarListenerTabela() {
-        JTableProduto.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                int linha = JTableProduto.getSelectedRow();
-                if (linha != -1) {
-                    preencherCampos(linha);
-                }
-            }
-        });
-    }
-
-    private void preencherCampos(int linha) {
-        DefaultTableModel modelo = (DefaultTableModel) JTableProduto.getModel();
+    private void carregarCategorias() {
         try {
-            int idProduto = (Integer) modelo.getValueAt(linha, 0);
-            String nome = JTFNome.getText();
-            
-            RemoteProduto service = (RemoteProduto) RMICliente.getProdutoService();
-            produtoSelecionado = service.buscarPorId(idProduto);
- 
-            if (produtoSelecionado != null) {
-                JTFNome.setText(produtoSelecionado.getNome());
-                JTFPreco.setText(String.valueOf(produtoSelecionado.getPrecoUnitario()));
-                JTFAtual.setText(String.valueOf(produtoSelecionado.getQuantidadeEstoque()));
-                JTFMinima.setText(String.valueOf(produtoSelecionado.getQuantidadeMinima()));
-                JTFMaxima.setText(String.valueOf(produtoSelecionado.getQuantidadeMaxima()));
-                JCBUnidade.setSelectedItem(produtoSelecionado.getUnidade());
-                
-                  if (produtoSelecionado.getCategoria() != null) {
-                    idCategoriaSelecionada = produtoSelecionado.getCategoria().getId();
-                }
+            JCBCategoria.removeAllItems();
+            JCBCategoria.addItem("Selecionar");
 
-                JBAlterar.setEnabled(true);
-                JBApagar.setEnabled(true);
+            RemoteCategoria service = RMICliente.getCategoriaService();
+            listaCategorias = service.listar();
+
+            for (Categoria c : listaCategorias) {
+                JCBCategoria.addItem(c.getNome());
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
-                "Erro ao buscar produto: " + e.getMessage(), 
-                "Erro de RMI", JOptionPane.ERROR_MESSAGE);
-            logger.severe("Erro ao buscar produto: " + e.getMessage());
+                "Erro ao carregar categorias: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+    
+    private int getCategoriaIdSelecionada() {
+        String categoriaNome = JCBCategoria.getSelectedItem().toString();
 
-    private void limparCampos() {
-        JTFNome.setText("");
-        JTFPreco.setText("");
-        JTFMaxima.setText("");
-        JTFAtual.setText("");
-        JTFMinima.setText("");
-        JCBUnidade.setSelectedIndex(0);
+        for (Categoria c : listaCategorias) {
+            if (c.getNome().equals(categoriaNome)) {
+                return c.getId();
+            }
+        }
+
+        return -1; // não encontrado (ou está em "Selecionar")
     }
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -156,9 +104,7 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JTFNome = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         JTFPreco = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        JTFPeso = new javax.swing.JTextField();
         JCBUnidade = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         JTFAtual = new javax.swing.JTextField();
@@ -169,6 +115,8 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JBSair = new javax.swing.JButton();
         JBApagar = new javax.swing.JButton();
         JBAlterar = new javax.swing.JButton();
+        JCBCategoria = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,15 +126,20 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JTableProduto.setForeground(new java.awt.Color(204, 204, 255));
         JTableProduto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nome", "Preço por unidade", "Peso da unidade", "Tipo da unidade", "Quantidade atual", "Quantidade  mínima", "Quantidade máxima", "Categoria"
+                "Id", "Nome", "Preço por unidade", "Tipo da unidade", "Quantidade atual", "Quantidade  mínima", "Quantidade máxima", "Categoria"
             }
         ));
+        JTableProduto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTableProdutoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(JTableProduto);
 
         jLabel1.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
@@ -208,15 +161,9 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JTFPreco.setForeground(new java.awt.Color(204, 204, 255));
         JTFPreco.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
 
-        jLabel3.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
-        jLabel3.setText("Peso da unidade:");
-
         jLabel4.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Tipo da unidade:");
-
-        JTFPeso.setBackground(new java.awt.Color(0, 0, 0));
-        JTFPeso.setForeground(new java.awt.Color(204, 204, 255));
-        JTFPeso.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
 
         JCBUnidade.setBackground(new java.awt.Color(0, 0, 0));
         JCBUnidade.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
@@ -277,6 +224,21 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         JBAlterar.setForeground(new java.awt.Color(204, 204, 255));
         JBAlterar.setText("Alterar");
         JBAlterar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+        JBAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBAlterarActionPerformed(evt);
+            }
+        });
+
+        JCBCategoria.setBackground(new java.awt.Color(0, 0, 0));
+        JCBCategoria.setFont(new java.awt.Font("Source Serif Pro", 1, 12)); // NOI18N
+        JCBCategoria.setForeground(new java.awt.Color(204, 204, 255));
+        JCBCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecionar" }));
+        JCBCategoria.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
+
+        jLabel8.setFont(new java.awt.Font("Source Serif Pro", 1, 15)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel8.setText("Categoria");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -286,12 +248,10 @@ public class FrmEditarProduto extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3)
                     .addComponent(jLabel1)
                     .addComponent(JTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(JTFPreco)
-                    .addComponent(JTFPeso))
+                    .addComponent(JTFPreco))
                 .addGap(172, 172, 172)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
@@ -303,7 +263,9 @@ public class FrmEditarProduto extends javax.swing.JFrame {
                 .addGap(131, 136, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(JCBUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(JCBUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JCBCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
                 .addContainerGap(137, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -320,40 +282,50 @@ public class FrmEditarProduto extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel1)
+                        .addGap(10, 10, 10))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(JTFMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(JTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel2))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(JTFAtual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(JTFMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(JTFPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(JTFPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 125, Short.MAX_VALUE))
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(JCBUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JTFMaxima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(jLabel4)
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JCBUnidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(JTFAtual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(25, 25, 25)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel8)
+                                        .addGap(19, 19, 19)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(JTFMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(JCBCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(JTFPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(127, 127, 127)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JBApagar)
                             .addComponent(JBSair)
@@ -384,42 +356,53 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_JTFNomeActionPerformed
 
     private void JBApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBApagarActionPerformed
-        // TODO add your handling code here:
         try {
             int linha = JTableProduto.getSelectedRow();
-            
-            if (linha < 0) {
-            JOptionPane.showMessageDialog(this, 
-                "Selecione um produto na tabela!");
-            return;
-            }
-            
-            int idProduto = (int) JTableProduto.getValueAt(linha, 0);
-            
-            int confirma = JOptionPane.showConfirmDialog(this,
-                "Deseja realmente excluir este produto?",
-                "Confirmar exclusão",
-                JOptionPane.YES_NO_OPTION);
 
-        if (confirma != JOptionPane.YES_OPTION) {
-            return;
-        }
-        
-        RemoteProduto service = RMICliente.getProdutoService();
-        service.deletar(idProduto);
-           
-        JOptionPane.showMessageDialog(this, 
-            "Produto excluído com sucesso!");
-        
-        carregarTabelaProdutos();
-        
-        limparCampos();
-        
+            if (linha < 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "Selecione um produto na tabela!", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Pega o ID da primeira coluna da linha selecionada
+            int idProduto = (int) JTableProduto.getValueAt(linha, 0);
+
+            int confirmar = JOptionPane.showConfirmDialog(this,
+                    "Deseja realmente apagar este produto?",
+                    "Confirmação",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmar != JOptionPane.YES_OPTION) {
+                return; // usuário cancelou
+            }
+
+            // Chama o serviço RMI
+            RemoteProduto service = RMICliente.getProdutoService();
+            boolean sucesso = service.deletar(idProduto);
+
+            if (sucesso) {
+                JOptionPane.showMessageDialog(this,
+                        "Produto removido com sucesso!",
+                        "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                // Recarrega a tabela após excluir
+                carregarProdutos();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Erro ao remover produto!",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, 
-                "Erro ao excluir produto: " + e.getMessage());
-            
+            JOptionPane.showMessageDialog(this,
+                    "Erro ao apagar produto: " + e.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_JBApagarActionPerformed
 
@@ -427,6 +410,82 @@ public class FrmEditarProduto extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_JBSairActionPerformed
+
+    private void JBAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBAlterarActionPerformed
+        try {
+            int linha = JTableProduto.getSelectedRow();
+
+            if (linha < 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "Selecione um produto na tabela!");
+                return;
+            }
+
+            // ID vem da tabela
+            int idProduto = Integer.parseInt(JTableProduto.getValueAt(linha, 0).toString());
+
+            // Coletar valores da interface
+            String nome = JTFNome.getText();
+            double preco = Double.parseDouble(JTFPreco.getText());
+            String unidade = JCBUnidade.getSelectedItem().toString();
+            int qtdAtual = Integer.parseInt(JTFAtual.getText());
+            int qtdMin = Integer.parseInt(JTFMinima.getText());
+            int qtdMax = Integer.parseInt(JTFMaxima.getText());
+
+            // Obter ID da categoria selecionada
+            int categoriaId = getCategoriaIdSelecionada();
+            if (categoriaId == -1) {
+                JOptionPane.showMessageDialog(this, 
+                    "Selecione uma categoria válida!");
+                return;
+            }
+
+            // Criar objeto Produto atualizado
+            Produto p = new Produto();
+            p.setId(idProduto);
+            p.setNome(nome);
+            p.setPrecoUnitario(preco);
+            p.setUnidade(unidade);
+            p.setQuantidadeEstoque(qtdAtual);
+            p.setQuantidadeMinima(qtdMin);
+            p.setQuantidadeMaxima(qtdMax);
+            Categoria c = new Categoria();
+            c.setId(categoriaId);
+            p.setCategoria(c);
+
+            // Enviar para o servidor via RMI
+            RemoteProduto service = RMICliente.getProdutoService();
+            service.atualizar(p);
+
+            JOptionPane.showMessageDialog(this, 
+                "Produto alterado com sucesso!");
+
+            // Recarregar tabela
+            carregarProdutos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao alterar: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_JBAlterarActionPerformed
+
+    private void JTableProdutoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableProdutoMouseClicked
+        int row = JTableProduto.getSelectedRow();
+        if (row < 0) return;
+
+        // preencher campos normais
+        JTFNome.setText(JTableProduto.getValueAt(row, 1).toString());
+        JTFPreco.setText(JTableProduto.getValueAt(row, 2).toString());
+        JCBUnidade.setSelectedItem(JTableProduto.getValueAt(row, 3).toString());
+        JTFAtual.setText(JTableProduto.getValueAt(row, 4).toString());
+        JTFMinima.setText(JTableProduto.getValueAt(row, 5).toString());
+        JTFMaxima.setText(JTableProduto.getValueAt(row, 6).toString());
+
+        // pegar nome da categoria mostrado na tabela
+        String categoriaNome = JTableProduto.getValueAt(row, 7).toString();
+        JCBCategoria.setSelectedItem(categoriaNome);
+    }//GEN-LAST:event_JTableProdutoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -457,21 +516,21 @@ public class FrmEditarProduto extends javax.swing.JFrame {
     private javax.swing.JButton JBAlterar;
     private javax.swing.JButton JBApagar;
     private javax.swing.JButton JBSair;
+    private javax.swing.JComboBox<String> JCBCategoria;
     private javax.swing.JComboBox<String> JCBUnidade;
     private javax.swing.JTextField JTFAtual;
     private javax.swing.JTextField JTFMaxima;
     private javax.swing.JTextField JTFMinima;
     private javax.swing.JTextField JTFNome;
-    private javax.swing.JTextField JTFPeso;
     private javax.swing.JTextField JTFPreco;
     private javax.swing.JTable JTableProduto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
